@@ -1,0 +1,22 @@
+services:
+    app:
+        build: ./
+        volumes:
+            - .:/workdir
+        ports:
+            - "8001:8000"
+            - "5174:5174"
+        depends_on:
+            - db
+    
+    db:
+      image: mysql:8.3
+      volumes:
+        - ./laravel-app/mysql_data:/var/lib/mysql
+      environment:
+        MYSQL_ROOT_PASSWORD: secret
+        MYSQL_DATABASE: library
+        MYSQL_USER: user
+        MYSQL_PASSWORD: password
+      ports:
+        - "3306:3306"
