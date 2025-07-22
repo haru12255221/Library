@@ -18,9 +18,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/index', function () {
-    return view('index');
-});
+Route::get('/index', [BookController::class, 'index'])->name('books.index');
 
 Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
 Route::post('/books', [BookController::class, 'store'])->name('books.store');

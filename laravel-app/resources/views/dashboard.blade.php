@@ -7,5 +7,6 @@
 
     <div class="py-12">
         <h1>本一覧画面</h1>
+        
     </div>
 </x-app-layout>

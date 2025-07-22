@@ -7,12 +7,21 @@ use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
-    public function index()
+    // Requestはクラス名、indexはメソッド名
+    public function index(Request $request)
     {
-        $books = Book::all();
+        $query = Book::query();
+        // 検索パラメータがある場合の処理
+        if ($request->filled('search')) {
+            // %はワイルドカードでなんでもok
+            $query->where('title', 'like', '%' . $request->search . '%')
+                ->orWhere('author', 'like', '%' . $request->search . '%');
+        }
+        // &queryを取得
+        $books = $query->get();
+
         return view('books.index', compact('books'));
     }
-
     // 書籍登録フォーム
     public function create()
     {
@@ -33,6 +42,6 @@ class BookController extends Controller
         Book::create($request->all());
 
         // 一覧画面にリダイレクト
-        return redirect()->route('dashboard')->with('success', '書籍を登録しました');
+        return redirect()->route('books.index')->with('success', '書籍を登録しました');
     } 
 }
