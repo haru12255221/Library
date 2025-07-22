@@ -4,7 +4,7 @@
 
 ### フェーズ1: 検索機能の実装
 
-- [ ] 1. 書籍一覧ページの基本構造を作成
+- [x] 1. 書籍一覧ページの基本構造を作成
   - resources/views/books/index.blade.php ファイルを作成
   - 既存のcreate.blade.phpと統一されたデザインシステムを使用
   - Tailwind CSSでレスポンシブレイアウトを実装
