@@ -15,4 +15,22 @@ class Book extends Model
         'author',
         'isbn',
     ];
+
+    public function isAvailable()
+    {
+        return !$this->loans()->where('status', Loan::STATUS_BORROWED)->exists();
+    }
+
+    public function isBorrowedByMe()
+    {
+        return $this->loans()
+                    ->where('status', Loan::STATUS_BORROWED)
+                    ->where('user_id', auth()->id())
+                    ->exists();
+    }
+
+    public function loans()
+    {
+        return $this->hasMany(Loan::class);
+    }
 }

@@ -10,7 +10,7 @@ class BookController extends Controller
     // Requestはクラス名、indexはメソッド名
     public function index(Request $request)
     {
-        $query = Book::query();
+        $query = Book::with('loans');
         // 検索パラメータがある場合の処理
         if ($request->filled('search')) {
             // %はワイルドカードでなんでもok
