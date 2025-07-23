@@ -32,10 +32,13 @@
                     </div>
                 </div>
                 
-                <div class="flex gap-3">
+                <div class="flex gap-3 pt-4">
                     <button 
                         type="submit"
-                        class="px-6 py-2 bg-[#ec652b] text-white rounded-md hover:bg-[#f4a261] focus:outline-none focus:ring-2 focus:ring-[#ec652b] focus:ring-offset-2 transition-colors"
+                        class="px-6 py-2 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors" 
+                        style="background-color: #3d7ca2; --tw-ring-color: #3d7ca2;" 
+                        onmouseover="this.style.backgroundColor='#2a5a7a'" 
+                        onmouseout="this.style.backgroundColor='#3d7ca2'"
                     >
                         <span class="flex items-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -80,32 +83,40 @@
                                 <!-- 貸出状況 -->
                                 <div class="flex items-center justify-between">
                                     @if($book->isAvailable())
-                                        <span class="text-green-600 font-medium flex items-center gap-2">
+                                        {{-- 利用可能: モバイルでもテキスト表示 --}}
+                                        <span class="font-medium flex items-center gap-2 text-success">
+                                            <img src="{{ asset('images/library-available.png') }}" alt="利用可能" class="w-auto h-12">
                                             利用可能
                                         </span>
                                         @auth
                                             <form method="POST" action="{{ route('loans.borrow') }}" class="inline" onsubmit="return confirm('「{{ $book->title }}」を借りますか？')">
                                                 @csrf
                                                 <input type="hidden" name="book_id" value="{{ $book->id }}">
-                                                <button type="submit" class="px-4 py-2 bg-[#295d72] text-white rounded-md hover:bg-[#3a7a94] transition-colors">
+                                                <button type="submit" class="px-4 py-2 text-white rounded-md transition-colors bg-primary hover:bg-primary-hover">
                                                     借りる
                                                 </button>
                                             </form>
                                         @endauth
                                     @elseif($book->isBorrowedByMe())
-                                        <span class="text-blue-600 font-medium flex items-center gap-2">
-                                            貸出中（あなた）
+                                        {{-- 貸出中（あなた）: モバイルではアイコンのみ --}}
+                                        <span class="font-medium flex items-center gap-2 text-primary">
                                             <img src="{{ asset('images/library-borrowed.png') }}" alt="貸出中（あなた）" class="w-auto h-12">
+                                            <span class="hidden md:inline">貸出中（あなた）</span>
                                         </span>
-                                        <a href="{{ route('loans.my') }}" class="text-sm text-[#ec652b] hover:text-[#f4a261] underline">
+                                        <a href="{{ route('loans.my') }}" class="text-sm underline transition-colors text-primary hover:text-primary-hover">
                                             マイページで返却する
                                         </a>
                                     @else
-                                        <span class="text-red-600 font-medium flex items-center gap-2">
-                                            貸出中
+                                        {{-- 貸出中です: モバイルではアイコンのみ --}}
+                                        <span class="font-medium flex items-center gap-2 text-danger">
                                             <img src="{{ asset('images/library-unavailable.png') }}" alt="貸出中" class="w-auto h-12">
+                                            <span class="hidden md:inline">貸出中です</span>
                                         </span>
-                                        <span class="text-sm text-gray-500">利用できません</span>
+                                        @if($book->currentLoan)
+                                            <span class="text-sm text-gray-500">
+                                                返却予定: {{ $book->currentLoan->due_date->format('Y/m/d') }}
+                                            </span>
+                                        @endif
                                     @endif
                                 </div>
                             </div>

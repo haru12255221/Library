@@ -27,10 +27,7 @@
                 </div>
                 <div>
                     <button type="submit" 
-                            class="w-full flex justify-center py-4 px-4 text-xl font-bold rounded transition duration-200" 
-                            style="background-color: #295d72; color: white; border: none;"
-                            onmouseover="this.style.backgroundColor='#3a7a94'"
-                            onmouseout="this.style.backgroundColor='#295d72'">
+                            class="w-full flex justify-center py-4 px-4 text-xl font-bold rounded transition duration-200 bg-primary text-text-white hover:bg-primary-hover">
                         登録する
                     </button>
                 </div>

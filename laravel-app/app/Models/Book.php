@@ -4,33 +4,45 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Book extends Model
 {
-    // この行はモデル名とテーブル名が一致しているので、Laravelが自動で認識してくれるので書かなくても良い
-    protected $table = 'books';
-    // カラムを増やしたかったら以下に追記する
-    protected $fillable = [
-        'title',
-        'author',
-        'isbn',
-    ];
+    use HasFactory;
 
-    public function isAvailable()
-    {
-        return !$this->loans()->where('status', Loan::STATUS_BORROWED)->exists();
-    }
+    protected $fillable = ['title', 'author', 'isbn'];
 
-    public function isBorrowedByMe()
-    {
-        return $this->loans()
-                    ->where('status', Loan::STATUS_BORROWED)
-                    ->where('user_id', auth()->id())
-                    ->exists();
-    }
-
-    public function loans()
+    public function loans(): HasMany
     {
         return $this->hasMany(Loan::class);
+    }
+
+    /**
+     * 現在貸出中の貸出情報を取得するリレーション。
+     * 返却日がnullのものが対象。
+     */
+    public function currentLoan()
+    {
+        return $this->hasOne(Loan::class)->whereNull('returned_at');
+    }
+
+    /**
+     * 本が利用可能かどうかを判定する。
+     */
+    public function isAvailable(): bool
+    {
+        return $this->currentLoan === null;
+    }
+
+    /**
+     * ログイン中のユーザーがこの本を借りているかどうかを判定する。
+     */
+    public function isBorrowedByMe(): bool
+    {
+        if ($this->isAvailable() || !auth()->check()) {
+            return false;
+        }
+
+        return $this->currentLoan->user_id === auth()->id();
     }
 }

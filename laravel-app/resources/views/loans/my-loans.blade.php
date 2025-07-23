@@ -1,40 +1,5 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>マイページ - 図書館管理システム</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-</head>
-<body class="bg-[#f8f9fa] min-h-screen">
-    <!-- ヘッダー -->
-    <header class="bg-[#295d72] shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 py-6">
-            <div class="flex justify-between items-center">
-                <h1 class="text-2xl font-bold text-white">図書館管理システム</h1>
-                <nav class="flex gap-4">
-                    <a href="{{ route('books.index') }}" class="text-white hover:text-gray-200 transition-colors">
-                        書籍一覧
-                    </a>
-                    <a href="{{ route('loans.my') }}" class="text-white hover:text-gray-200 transition-colors font-semibold">
-                        マイページ
-                    </a>
-                    @auth
-                        <form method="POST" action="{{ route('logout') }}" class="inline">
-                            @csrf
-                            <button type="submit" class="text-white hover:text-gray-200 transition-colors">
-                                ログアウト
-                            </button>
-                        </form>
-                    @endauth
-                </nav>
-            </div>
-        </div>
-    </header>
-
-    <!-- メインコンテンツ -->
-    <main class="max-w-7xl mx-auto px-4 py-8">
+<x-app-layout>
+    <div class="max-w-7xl mx-auto px-4">
         <!-- 成功・エラーメッセージ -->
         @if(session('success'))
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
@@ -76,11 +41,11 @@
                                         <p class="text-sm text-gray-500 mb-2">ISBN: {{ $loan->book->isbn }}</p>
                                         
                                         <div class="flex gap-4 text-sm">
-                                            <span class="text-blue-600">
-                                                📅 借用日: {{ $loan->borrowed_at->format('Y年m月d日') }}
+                                            <span class="text-primary">
+                                                借りた日: {{ $loan->borrowed_at->format('Y年m月d日') }}
                                             </span>
-                                            <span class="text-orange-600">
-                                                ⏰ 返却期限: {{ $loan->due_date->format('Y年m月d日') }}
+                                            <span class="text-danger">
+                                                返却期限: {{ $loan->due_date->format('Y年m月d日') }}
                                             </span>
                                         </div>
                                         
@@ -93,20 +58,17 @@
                                         @endphp
                                         
                                         @if($isPast)
-                                            <div class="mt-2 text-red-600 font-medium">
+                                            <div class="mt-2 font-medium" style="color: #e3595b;">
                                                 ⚠️ 返却期限を過ぎています
                                             </div>
                                         @elseif($daysUntilDue <= 3 && $daysUntilDue >= 0)
-                                            <div class="mt-2 text-yellow-600 font-medium">
+                                            <div class="mt-2 font-medium" style="color: #d6e185;">
                                                 ⚠️ 返却期限が近づいています (残り{{ floor($daysUntilDue) }}日)
                                             </div>
-                                            <div class="text-xs text-red-500">
-                                                条件チェック: {{ $daysUntilDue }} <= 3 = {{ $daysUntilDue <= 3 ? 'true' : 'false' }} && 
-                                                {{ $daysUntilDue }} >= 0 = {{ $daysUntilDue >= 0 ? 'true' : 'false' }}
-                                            </div>
+
                                         @else
-                                            <div class="mt-2 text-green-600 font-medium">
-                                                ✅ 返却期限まで余裕があります (残り{{ floor($daysUntilDue) }}日)
+                                            <div class="mt-2 font-medium" style="color: #d6e185;">
+                                                返却期限まで余裕があります (残り{{ floor($daysUntilDue) }}日)
                                             </div>
                                         @endif
                                     </div>
@@ -117,7 +79,10 @@
                                                 onsubmit="return confirm('「{{ $loan->book->title }}」を返却しますか？')">
                                             @csrf
                                             <button type="submit" 
-                                                    class="px-4 py-2 bg-[#ec652b] text-white rounded-md hover:bg-[#f4a261] focus:outline-none focus:ring-2 focus:ring-[#ec652b] focus:ring-offset-2 transition-colors">
+                                                    class="px-4 py-2 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors"
+                                                    style="background-color: #e3595b; --tw-ring-color: #e3595b;"
+                                                    onmouseover="this.style.backgroundColor='#d63d3f'"
+                                                    onmouseout="this.style.backgroundColor='#e3595b'">
                                                 返却する
                                             </button>
                                         </form>
@@ -128,7 +93,9 @@
                     </div>
                 @else
                     <div class="text-center py-12">
-                        <div class="text-6xl mb-4">📚</div>
+                        <div class="text-6xl mb-4">
+                            <img src="{{ asset('images/Library1.png') }}" alt="本" class="w-auto h-32 mx-auto">
+                        </div>
                         <p class="text-gray-500 text-lg mb-4">現在借りている本はありません</p>
                         <a href="{{ route('books.index') }}" 
                             class="inline-block px-6 py-3 bg-[#295d72] text-white rounded-md hover:bg-[#3a7a94] transition-colors">
@@ -143,12 +110,12 @@
         @if($myLoans->count() > 0)
             <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-white rounded-lg shadow p-6 text-center">
-                    <div class="text-3xl font-bold text-[#295d72]">{{ $myLoans->count() }}</div>
+                    <div class="text-3xl font-bold text-primary">{{ $myLoans->count() }}</div>
                     <div class="text-gray-600">借用中の本</div>
                 </div>
                 
                 <div class="bg-white rounded-lg shadow p-6 text-center">
-                    <div class="text-3xl font-bold text-orange-600">
+                    <div class="text-3xl font-bold text-success">
                         {{ $myLoans->filter(function($loan) { 
                             $daysUntil = now()->diffInDays($loan->due_date, false);
                             return $daysUntil <= 3 && $daysUntil >= 0 && !$loan->due_date->isPast();
@@ -158,13 +125,12 @@
                 </div>
                 
                 <div class="bg-white rounded-lg shadow p-6 text-center">
-                    <div class="text-3xl font-bold text-red-600">
+                    <div class="text-3xl font-bold text-danger">
                         {{ $myLoans->filter(function($loan) { return $loan->due_date->isPast(); })->count() }}
                     </div>
                     <div class="text-gray-600">期限切れの本</div>
                 </div>
             </div>
         @endif
-    </main>
-</body>
-</html>
+    </div>
+</x-app-layout>

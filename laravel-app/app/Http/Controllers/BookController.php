@@ -10,17 +10,19 @@ class BookController extends Controller
     // Requestはクラス名、indexはメソッド名
     public function index(Request $request)
     {
-        $query = Book::with('loans');
-        // 検索パラメータがある場合の処理
-        if ($request->filled('search')) {
-            // %はワイルドカードでなんでもok
-            $query->where('title', 'like', '%' . $request->search . '%')
-                ->orWhere('author', 'like', '%' . $request->search . '%');
-        }
-        // &queryを取得
-        $books = $query->get();
+        $search = $request->input('search');
+        $query = Book::query();
 
-        return view('books.index', compact('books'));
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('author', 'like', "%{$search}%");
+            });
+        }
+
+        $books = $query->with('currentLoan')->get();
+
+        return view('books.index', compact('books', 'search'));
     }
     // 書籍登録フォーム
     public function create()

@@ -9,10 +9,22 @@ use Illuminate\Http\Request;
 class LoanController extends Controller
 {
     // 1. 貸出一覧（管理者用）
-    public function index()
+    public function index(Request $request)
     {
-        $loans = Loan::with('user', 'book')->get();
-        return view('loans.index', compact('loans'));
+        $sort = $request->input('sort', 'borrowed_at');
+        $direction = $request->input('direction', 'desc');
+
+        $sortable = ['borrowed_at', 'due_date', 'status'];
+        if (!in_array($sort, $sortable)) {
+            $sort = 'borrowed_at';
+            $direction = 'desc';
+        }
+
+        $loans = Loan::with(['user', 'book'])
+                    ->orderBy($sort, $direction)
+                    ->get();
+
+        return view('loans.index', compact('loans', 'sort', 'direction'));
     }
 
     // 2. 貸出処理

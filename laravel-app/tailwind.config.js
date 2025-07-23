@@ -11,6 +11,20 @@ export default {
 
     theme: {
         extend: {
+            colors: {
+                primary: '#3d7ca2',
+                success: '#d6e185',
+                danger: '#e3595b',
+                'primary-hover': '#2a5a7a',
+                'success-hover': '#c4d470',
+                'danger-hover': '#d63d3f',
+                background: '#f8f9fa',
+                'header-bg': '#ffffff',
+                'text-primary': '#4f4f4f',
+                'text-secondary': '#6b7280',
+                'text-light': '#9ca3af',
+                'text-white': '#ffffff',
+            },
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
