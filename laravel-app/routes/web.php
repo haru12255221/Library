@@ -11,10 +11,7 @@ Route::get('/books', [BookController::class, 'index'])->name('books.index');
 
 // 認証が必要なルート
 Route::middleware('auth')->group(function () {
-    // ダッシュボード
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->middleware('verified')->name('dashboard');
+    // ダッシュボードは削除済み（図書館システムでは不要）
 
     // プロフィール管理
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
