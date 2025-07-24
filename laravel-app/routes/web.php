@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 // パブリックルート（認証不要）
 Route::get('/', [BookController::class, 'index'])->name('home');
-Route::get('/index', [BookController::class, 'index'])->name('books.index');
+Route::get('/books', [BookController::class, 'index'])->name('books.index');
 
 // 認証が必要なルート
 Route::middleware('auth')->group(function () {
@@ -27,8 +27,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/loans/return/{loan}', [LoanController::class, 'returnBook'])->name('loans.return');
 });
 
-// 管理者専用ルート
-Route::middleware(['auth', 'admin'])->group(function () {
+// 認証済みユーザー用ルート（管理者権限を一時的に削除）
+Route::middleware(['auth'])->group(function () {
     // 書籍管理
     Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
     Route::post('/books', [BookController::class, 'store'])->name('books.store');
