@@ -60,7 +60,7 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: laravel-app/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install NPM dependencies
         run: npm ci
@@ -119,7 +119,7 @@ jobs:
         uses: codecov/codecov-action@v3
         if: success()
         with:
-          file: ./coverage.xml
+          file: coverage.xml
           flags: unittests
           name: codecov-umbrella
 
