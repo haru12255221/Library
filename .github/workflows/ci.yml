@@ -39,15 +39,17 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.3'
           extensions: mbstring, dom, fileinfo, mysql, redis
-          coverage: xdebug
 
       - name: Copy .env
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
 
       - name: Install Composer dependencies
-        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+        run: |
+          composer --version
+          php --version
+          composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Generate key
         run: php artisan key:generate

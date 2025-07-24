@@ -22,11 +22,13 @@ class LoanFactory extends Factory
     public function definition(): array
     {
         $borrowedAt = $this->faker->dateTimeBetween('-30 days', 'now');
+        $dueDate = $this->faker->dateTimeBetween($borrowedAt, '+14 days');
         
         return [
             'user_id' => User::factory(),
             'book_id' => Book::factory(),
             'borrowed_at' => $borrowedAt,
+            'due_date' => $dueDate,
             'returned_at' => null,
             'created_at' => $borrowedAt,
             'updated_at' => $borrowedAt,
