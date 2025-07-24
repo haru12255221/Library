@@ -41,7 +41,7 @@ class LoanController extends Controller
                             ->first();
 
         if ($existingLoan) {
-            return back()->with('error', 'この本は既に貸出中です');
+            return redirect()->route('books.index')->with('error', 'この本は既に貸出中です');
         }
 
         // 貸出記録作成
@@ -53,7 +53,7 @@ class LoanController extends Controller
             'status' => Loan::STATUS_BORROWED
         ]);
 
-        return back()->with('success', '本を借りました！');
+        return redirect()->route('books.index')->with('success', '本を借りました！');
     }
 
     // 3. 返却処理
@@ -71,7 +71,7 @@ class LoanController extends Controller
             'status' => Loan::STATUS_RETURNED
         ]);
 
-        return back()->with('success', '本を返却しました！');
+        return redirect()->route('books.index')->with('success', '本を返却しました！');
     }
 
     public function myLoans()
