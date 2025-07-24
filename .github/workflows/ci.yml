@@ -60,6 +60,7 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
+          cache-dependency-path: laravel-app/package-lock.json
 
       - name: Install NPM dependencies
         run: npm ci
