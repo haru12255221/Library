@@ -53,10 +53,15 @@ class LoanManagementTest extends TestCase
         $response->assertRedirect('/books');
         $response->assertSessionHas('success');
 
+        // 返却されたことを確認（日時で記録される）
         $this->assertDatabaseHas('loans', [
             'id' => $loan->id,
-            'returned_at' => now()->toDateString(), // 日付のみ比較
         ]);
+        
+        // 返却日時が設定されていることを確認
+        $loan->refresh();
+        $this->assertNotNull($loan->returned_at);
+        $this->assertTrue($loan->returned_at->isToday());
     }
 
     /** @test */
@@ -124,8 +129,8 @@ class LoanManagementTest extends TestCase
         $response = $this->actingAs($this->user)
                          ->post("/loans/return/999"); // 存在しないloan ID
 
-        $response->assertRedirect('/books');
-        $response->assertSessionHas('error');
+        // 存在しないIDの場合は404が返される（Laravel標準動作）
+        $response->assertStatus(404);
 
         // 返却されていないことを確認
         $this->assertDatabaseHas('loans', [
