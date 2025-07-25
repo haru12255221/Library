@@ -117,8 +117,26 @@ jobs:
           REDIS_PORT: 6379
         run: php artisan test
 
-  notify:
+  deploy:
     needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && needs.test.result == 'success'
+    
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/Library
+            git pull origin main
+            docker-compose down
+            docker-compose up -d --build
+
+  notify:
+    needs: [test, deploy]
     runs-on: ubuntu-latest
     if: always()
     defaults:
@@ -127,12 +145,12 @@ jobs:
     
     steps:
       - name: Notify success
-        if: needs.test.result == 'success'
+        if: needs.test.result == 'success' && (needs.deploy.result == 'success' || needs.deploy.result == 'skipped')
         run: |
-          echo "✅ All tests passed! Ready for deployment."
+          echo "✅ All tests passed! Deployment completed successfully."
           
       - name: Notify failure
-        if: needs.test.result == 'failure'
+        if: needs.test.result == 'failure' || needs.deploy.result == 'failure'
         run: |
-          echo "❌ Tests failed! Please check the logs."
+          echo "❌ Tests failed or deployment failed! Please check the logs."
           exit 1

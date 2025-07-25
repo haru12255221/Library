@@ -14,5 +14,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
 COPY . .
 WORKDIR /workdir/laravel-app
 RUN composer install
+RUN npm install
+RUN npm run build
 CMD [ "php", "artisan", "serve", "--host", "0.0.0.0" ]
 EXPOSE 8000
