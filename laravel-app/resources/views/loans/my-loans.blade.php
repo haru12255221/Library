@@ -67,7 +67,7 @@
                                             </div>
 
                                         @else
-                                            <div class="mt-2 font-medium" style="color: #d6e185;">
+                                            <div class="mt-2 font-medium" style="color: #669C6F;">
                                                 返却期限まで余裕があります (残り{{ floor($daysUntilDue) }}日)
                                             </div>
                                         @endif

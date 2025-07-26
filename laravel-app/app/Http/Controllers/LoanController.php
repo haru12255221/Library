@@ -61,7 +61,7 @@ class LoanController extends Controller
     {
         // 自分の貸出記録かチェック
         if ($loan->user_id !== auth()->id()) {
-            return redirect()->route('books.index')
+            return redirect()->route('loans.my')
             ->with('error', '他人の貸出記録は操作できません');
         }
 
@@ -71,7 +71,7 @@ class LoanController extends Controller
             'status' => Loan::STATUS_RETURNED
         ]);
 
-        return redirect()->route('books.index')->with('success', '本を返却しました！');
+        return redirect()->route('loans.my')->with('success', '本を返却しました！');
     }
 
     public function myLoans()

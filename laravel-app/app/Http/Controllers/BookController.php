@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Services\GoogleBooksService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class BookController extends Controller
 {
+    protected $googleBooksService;
+
+    public function __construct(GoogleBooksService $googleBooksService)
+    {
+        $this->googleBooksService = $googleBooksService;
+    }
     // Requestはクラス名、indexはメソッド名
     public function index(Request $request)
     {
@@ -33,37 +41,80 @@ class BookController extends Controller
     // 書籍登録処理
     public function store(Request $request)
     {
-        // バリデーション
+        // 拡張バリデーション
         $request->validate([
-            'title' => 'required',
-            'author' => 'required',
-            'isbn' => 'required|unique:books',
+            'title' => 'required|max:255',
+            'author' => 'required|max:255',
+            'isbn' => 'required|unique:books|regex:/^[0-9\-X]+$/',
+            'publisher' => 'nullable|max:255',
+            'published_date' => 'nullable|date|before_or_equal:today',
+            'description' => 'nullable|max:2000',
+            'thumbnail_url' => 'nullable|url',
         ]);
 
-        // データベースに保存
-        Book::create($request->all());
+        // データベースに保存（拡張フィールド対応）
+        $book = Book::create([
+            'title' => $request->title,
+            'author' => $request->author,
+            'isbn' => $request->isbn,
+            'publisher' => $request->publisher,
+            'published_date' => $request->published_date,
+            'description' => $request->description,
+            'thumbnail_url' => $request->thumbnail_url,
+        ]);
+
+        Log::info("Book registered: {$book->title} (ID: {$book->id})");
 
         // 一覧画面にリダイレクト
         return redirect()->route('books.index')->with('success', '書籍を登録しました');
     } 
 
-    // スキャン
+    // ISBN検索（拡張版）
     public function fetchFromISBN(Request $request)
     {
+        $request->validate([
+            'isbn' => 'required|string'
+        ]);
+
         $isbn = $request->isbn;
+        Log::info("Fetching book info for ISBN: {$isbn}");
 
-        $response = Http::get("https://www.googleapis.com/books/v1/volumes?q=isbn:" . $isbn);
+        // GoogleBooksServiceを使用
+        $bookData = $this->googleBooksService->fetchByIsbn($isbn);
 
-        if ($response->successful() && isset($response['items'][0])) {
-            $book = $response['items'][0]['volumeInfo'];
-
+        if ($bookData) {
+            Log::info("Book found: {$bookData['title']}");
             return response()->json([
-                'title' => $book['title'] ?? '',
-                'authors' => implode(', ', $book['authors'] ?? []),
-                'thumbnail' => $book['imageLinks']['thumbnail'] ?? '',
+                'success' => true,
+                'data' => [
+                    'title' => $bookData['title'],
+                    'author' => $bookData['authors'],
+                    'publisher' => $bookData['publisher'],
+                    'published_date' => $bookData['published_date'],
+                    'description' => $bookData['description'],
+                    'thumbnail_url' => $bookData['thumbnail_url'],
+                    'page_count' => $bookData['page_count'],
+                    'language' => $bookData['language'],
+                ]
             ]);
         }
 
-        return response()->json(['error' => '書籍が見つかりませんでした'], 404);
+        Log::warning("No book found for ISBN: {$isbn}");
+        return response()->json([
+            'success' => false,
+            'error' => '書籍が見つかりませんでした。手動で入力してください。'
+        ], 404);
+    }
+
+    // 書籍詳細表示
+    public function show(Book $book)
+    {
+        // 関連書籍を取得（同じ著者の他の書籍、最大6冊）
+        $relatedBooks = Book::where('author', $book->author)
+            ->where('id', '!=', $book->id)
+            ->limit(6)
+            ->get();
+
+        return view('books.show', compact('book', 'relatedBooks'));
     }
 }

@@ -2,6 +2,16 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <div class="max-w-7xl mx-auto px-4">
+        <!-- 成功メッセージ -->
+        @if(session('success'))
+            <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-md mb-6 flex items-center gap-2">
+                <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                {{ session('success') }}
+            </div>
+        @endif
+
         <!-- 検索フォーム -->
         <div class="bg-white rounded-lg shadow p-6 mb-8" x-data="searchForm()">
             <form action="{{ route('books.index') }}" method="GET" class="space-y-4">
@@ -69,8 +79,23 @@
 
         <!-- 書籍一覧 -->
         <div class="bg-white rounded-lg shadow">
-            <div class="px-6 py-4 border-b border-gray-200">
+            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                 <h2 class="text-lg font-semibold text-[#4f4f4f]">書籍一覧</h2>
+                
+                @auth
+                    @if(auth()->user()->isAdmin())
+                        <a href="{{ route('books.create') }}" 
+                           class="px-4 py-2 text-white rounded-md transition-colors flex items-center gap-2"
+                           style="background-color: #3d7ca2;" 
+                           onmouseover="this.style.backgroundColor='#2a5a7a'" 
+                           onmouseout="this.style.backgroundColor='#3d7ca2'">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            書籍を登録
+                        </a>
+                    @endif
+                @endauth
             </div>
             
             <div class="p-6">
@@ -78,10 +103,56 @@
                     <div class="grid gap-4">
                         @foreach($books as $book)
                             <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md hover:border-[#295d72] transition-all">
-                                <h3 class="text-lg font-semibold text-[#4f4f4f] mb-2">{{ $book->title }}</h3>
-                                <p class="text-gray-600 mb-1">著者: {{ $book->author }}</p>
+                                <!-- 詳細ページへのリンク -->
+                                <a href="{{ route('books.show', $book) }}" class="block mb-3 group">
+                                    <div class="flex items-center gap-2 text-sm text-[#295d72] group-hover:text-[#3a7a94] transition-colors">
+                                        <span>詳細を見る</span>
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                    </div>
+                                </a>
+                                <div class="flex gap-4">
+                                    <!-- 表紙画像 -->
+                                    <div class="flex-shrink-0">
+                                        @if($book->thumbnail_url)
+                                            <img src="{{ $book->thumbnail_url }}" 
+                                                 alt="{{ $book->title }}の表紙" 
+                                                 class="w-16 h-20 object-cover rounded shadow-sm">
+                                        @else
+                                            <div class="w-16 h-20 bg-gray-200 rounded shadow-sm flex items-center justify-center">
+                                                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                                </svg>
+                                            </div>
+                                        @endif
+                                    </div>
+                                    
+                                    <!-- 書籍情報 -->
+                                    <div class="flex-1 min-w-0">
+                                        <h3 class="text-lg font-semibold text-[#4f4f4f] mb-1 truncate">{{ $book->title }}</h3>
+                                        <p class="text-gray-600 mb-1">著者: {{ $book->formatted_author }}</p>
+                                        
+                                        <!-- 拡張情報 -->
+                                        @if($book->publisher)
+                                            <p class="text-sm text-gray-500 mb-1">出版社: {{ $book->formatted_publisher }}</p>
+                                        @endif
+                                        
+                                        @if($book->published_date)
+                                            <p class="text-sm text-gray-500 mb-1">出版日: {{ $book->formatted_published_date }}</p>
+                                        @endif
+                                        
+                                        @if($book->description)
+                                            <p class="text-sm text-gray-600 mb-2 line-clamp-2">{{ Str::limit($book->description, 100) }}</p>
+                                        @endif
+                                        
+                                        <!-- ISBN -->
+                                        <p class="text-xs text-gray-400 mb-2">ISBN: {{ $book->isbn }}</p>
+                                    </div>
+                                </div>
+                                
                                 <!-- 貸出状況 -->
-                                <div class="flex items-center justify-between">
+                                <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
                                     @if($book->isAvailable())
                                         {{-- 利用可能: モバイルでもテキスト表示 --}}
                                         <span class="font-medium flex items-center gap-2 text-success">
