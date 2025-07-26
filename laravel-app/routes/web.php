@@ -34,4 +34,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/loans', [LoanController::class, 'index'])->name('loans.index');
 });
 
+Route::get('/isbn-scan', function () {
+    return view('isbn-scan');
+});
+Route::post('/isbn-fetch', [\App\Http\Controllers\BookController::class, 'fetchFromISBN']);
+
+
 require __DIR__.'/auth.php';

@@ -16,7 +16,7 @@ class BookController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('author', 'like', "%{$search}%");
+                    ->orWhere('author', 'like', "%{$search}%");
             });
         }
 
@@ -46,4 +46,24 @@ class BookController extends Controller
         // 一覧画面にリダイレクト
         return redirect()->route('books.index')->with('success', '書籍を登録しました');
     } 
+
+    // スキャン
+    public function fetchFromISBN(Request $request)
+    {
+        $isbn = $request->isbn;
+
+        $response = Http::get("https://www.googleapis.com/books/v1/volumes?q=isbn:" . $isbn);
+
+        if ($response->successful() && isset($response['items'][0])) {
+            $book = $response['items'][0]['volumeInfo'];
+
+            return response()->json([
+                'title' => $book['title'] ?? '',
+                'authors' => implode(', ', $book['authors'] ?? []),
+                'thumbnail' => $book['imageLinks']['thumbnail'] ?? '',
+            ]);
+        }
+
+        return response()->json(['error' => '書籍が見つかりませんでした'], 404);
+    }
 }
