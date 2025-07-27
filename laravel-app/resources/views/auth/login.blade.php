@@ -8,10 +8,14 @@
                 </a>
             </div>
 
-            <h2 class="text-center text-2xl font-bold text-text-primary mb-6">ログイン</h2>
+            <h2 class="text-center text-2xl font-bold text-lib-text-primary mb-6">ログイン</h2>
 
             <!-- Session Status -->
-            <x-auth-session-status class="mb-4" :status="session('status')" />
+            @if (session('status'))
+                <x-alert type="info">
+                    {{ session('status') }}
+                </x-alert>
+            @endif
 
             <form method="POST" action="{{ route('login') }}">
                 @csrf
@@ -19,38 +23,39 @@
                 <!-- Email Address -->
                 <div>
                     <label for="email" class="block font-medium text-sm text-gray-700">メールアドレス</label>
-                    <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                    <input id="email" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-lib-primary focus:ring-lib-primary" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username" />
+                    @error('email')
+                        <p class="text-lib-accent text-sm mt-2">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Password -->
                 <div class="mt-4">
                     <label for="password" class="block font-medium text-sm text-gray-700">パスワード</label>
-                    <x-text-input id="password" class="block mt-1 w-full"
-                                    type="password"
-                                    name="password"
-                                    required autocomplete="current-password" />
-                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    <input id="password" class="block mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-lib-primary focus:ring-lib-primary" type="password" name="password" required autocomplete="current-password" />
+                    @error('password')
+                        <p class="text-lib-accent text-sm mt-2">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Remember Me -->
                 <div class="block mt-4">
                     <label for="remember_me" class="inline-flex items-center">
                         <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-primary shadow-sm focus:ring-primary" name="remember">
-                        <span class="ms-2 text-sm text-gray-600">ログイン状態を維持する</span>
+                        <span class="ms-2 text-sm text-lib-text-secondary">ログイン状態を維持する</span>
                     </label>
                 </div>
 
                 <div class="flex items-center justify-end mt-4">
                     @if (Route::has('password.request'))
-                        <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" href="{{ route('password.request') }}">
+                        <a class="underline text-sm text-lib-text-secondary hover:text-lib-text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lib-primary" href="{{ route('password.request') }}">
                             パスワードを忘れましたか？
                         </a>
                     @endif
 
-                    <button type="submit" class="ms-3 inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-primary-hover focus:bg-primary-hover active:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition ease-in-out duration-150">
+                    <x-button type="submit" variant="primary" class="ms-3">
                         ログイン
-                    </button>
+                    </x-button>
                 </div>
             </form>
         </div>

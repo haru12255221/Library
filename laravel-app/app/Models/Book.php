@@ -10,7 +10,19 @@ class Book extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'author', 'isbn'];
+    protected $fillable = [
+        'title', 
+        'author', 
+        'isbn', 
+        'publisher', 
+        'published_date', 
+        'description', 
+        'thumbnail_url'
+    ];
+
+    protected $casts = [
+        'published_date' => 'date',
+    ];
 
     public function loans(): HasMany
     {
@@ -44,5 +56,51 @@ class Book extends Model
         }
 
         return $this->currentLoan->user_id === auth()->id();
+    }
+
+    /**
+     * 出版日を日本語形式でフォーマットして取得する。
+     */
+    public function getFormattedPublishedDateAttribute(): string
+    {
+        return $this->published_date ? $this->published_date->format('Y年m月d日') : '不明';
+    }
+
+    /**
+     * 表紙画像のURLを取得する（Google Books APIまたはデフォルト画像）。
+     */
+    public function getThumbnailImageAttribute(): string
+    {
+        return $this->thumbnail_url ?: '/images/no-book-cover.png';
+    }
+
+    /**
+     * 出版社を日本語形式でフォーマットして取得する。
+     */
+    public function getFormattedPublisherAttribute(): string
+    {
+        return $this->publisher ?: '不明';
+    }
+
+    /**
+     * 説明文を日本語形式でフォーマットして取得する（長い場合は省略）。
+     */
+    public function getFormattedDescriptionAttribute(): string
+    {
+        if (!$this->description) {
+            return '説明なし';
+        }
+        
+        return mb_strlen($this->description) > 100 
+            ? mb_substr($this->description, 0, 100) . '...' 
+            : $this->description;
+    }
+
+    /**
+     * 著者名を日本語形式でフォーマットして取得する。
+     */
+    public function getFormattedAuthorAttribute(): string
+    {
+        return $this->author ?: '不明';
     }
 }

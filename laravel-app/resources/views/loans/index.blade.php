@@ -1,100 +1,133 @@
 <x-app-layout>
-    <div class="bg-white rounded-lg shadow">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg font-semibold text-[#4f4f4f]">
-                貸出履歴一覧 (全{{ $loans->count() }}件)
-            </h3>
-        </div>
-        <div class="p-6">
-            @if($loans->count() > 0)
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">書籍情報</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">借主</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    @php
-                                        $linkDirection = ($sort === 'borrowed_at' && $direction === 'asc') ? 'desc' : 'asc';
-                                    @endphp
-                                    <a href="{{ route('loans.index', ['sort' => 'borrowed_at', 'direction' => $linkDirection]) }}">
-                                        貸出日
-                                        @if ($sort === 'borrowed_at')
-                                            <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span>
-                                        @endif
-                                    </a>
-                                </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    @php
-                                        $linkDirection = ($sort === 'due_date' && $direction === 'asc') ? 'desc' : 'asc';
-                                    @endphp
-                                    <a href="{{ route('loans.index', ['sort' => 'due_date', 'direction' => $linkDirection]) }}">
-                                        返却期限
-                                        @if ($sort === 'due_date')
-                                            <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span>
-                                        @endif
-                                    </a>
-                                </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    @php
-                                        $linkDirection = ($sort === 'status' && $direction === 'asc') ? 'desc' : 'asc';
-                                    @endphp
-                                    <a href="{{ route('loans.index', ['sort' => 'status', 'direction' => $linkDirection]) }}">
-                                        状態
-                                        @if ($sort === 'status')
-                                            <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span>
-                                        @endif
-                                    </a>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach($loans as $loan)
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-lg font-semibold text-lib-text-primary">
+                    貸出履歴一覧 (全{{ $loans->count() }}件)
+                </h3>
+            </div>
+            
+            <div class="p-6">
+                @if($loans->count() > 0)
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ $loan->book->title }}</div>
-                                        <div class="text-sm text-gray-500">著者: {{ $loan->book->author }}</div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $loan->user->name }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $loan->borrowed_at->format('Y/m/d') }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $loan->due_date->format('Y/m/d') }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        {{-- ▼ここがポイント！▼ --}}
-                                        @if ($loan->returned_at)
-                                            {{-- 返却日が記録されていれば「返却済み」と表示 --}}
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                返却済み ({{ $loan->returned_at->format('Y/m/d') }})
-                                            </span>
-                                        @elseif ($loan->due_date->isPast())
-                                            {{-- 返却されておらず、期限が過ぎていれば「期限切れ」と表示 --}}
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                                                期限切れ
-                                            </span>
-                                        @else
-                                            {{-- それ以外（返却されておらず、期限内）は「貸出中」--}}
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                                貸出中
-                                            </span>
-                                        @endif
-                                    </td>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-lib-text-secondary uppercase tracking-wider">
+                                        利用者
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-lib-text-secondary uppercase tracking-wider">
+                                        書籍
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-lib-text-secondary uppercase tracking-wider">
+                                        @php
+                                            $linkDirection = ($sort === 'borrowed_at' && $direction === 'asc') ? 'desc' : 'asc';
+                                        @endphp
+                                        <a href="{{ route('loans.index', ['sort' => 'borrowed_at', 'direction' => $linkDirection]) }}"
+                                           class="text-lib-primary hover:text-lib-primary-hover transition-colors">
+                                            貸出日
+                                            @if ($sort === 'borrowed_at')
+                                                @if ($direction === 'asc')
+                                                    ↑
+                                                @else
+                                                    ↓
+                                                @endif
+                                            @endif
+                                        </a>
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-lib-text-secondary uppercase tracking-wider">
+                                        @php
+                                            $linkDirection = ($sort === 'due_date' && $direction === 'asc') ? 'desc' : 'asc';
+                                        @endphp
+                                        <a href="{{ route('loans.index', ['sort' => 'due_date', 'direction' => $linkDirection]) }}"
+                                           class="text-lib-primary hover:text-lib-primary-hover transition-colors">
+                                            返却期限
+                                            @if ($sort === 'due_date')
+                                                @if ($direction === 'asc')
+                                                    ↑
+                                                @else
+                                                    ↓
+                                                @endif
+                                            @endif
+                                        </a>
+                                    </th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-lib-text-secondary uppercase tracking-wider">
+                                        @php
+                                            $linkDirection = ($sort === 'status' && $direction === 'asc') ? 'desc' : 'asc';
+                                        @endphp
+                                        <a href="{{ route('loans.index', ['sort' => 'status', 'direction' => $linkDirection]) }}"
+                                           class="text-lib-primary hover:text-lib-primary-hover transition-colors">
+                                            状態
+                                            @if ($sort === 'status')
+                                                @if ($direction === 'asc')
+                                                    ↑
+                                                @else
+                                                    ↓
+                                                @endif
+                                            @endif
+                                        </a>
+                                    </th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            @else
-                {{-- 貸出がない場合の表示（ここは元のままでOK） --}}
-                <div class="text-center py-12">
-                    <div class="text-6xl mb-4">
-                        <img src="{{ asset('images/Library1.png') }}" alt="本" class="w-auto h-32 mx-auto">
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @foreach($loans as $loan)
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-lib-text-primary">
+                                            {{ $loan->user->name }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-lib-text-primary">
+                                            {{ $loan->book->title }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-lib-text-secondary">
+                                            {{ $loan->borrowed_at->format('Y年m月d日') }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-lib-text-secondary">
+                                            {{ $loan->due_date->format('Y年m月d日') }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            @if($loan->status === 'returned')
+                                                {{-- 返却済み: 成功カラー（自然な緑） --}}
+                                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full flex items-center gap-1 bg-lib-secondary-light text-lib-secondary-hover border border-lib-secondary">
+                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                    </svg>
+                                                    返却済み
+                                                </span>
+                                            @elseif($loan->due_date->isPast())
+                                                {{-- 期限切れ: エラーカラー（コーラルレッド） --}}
+                                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full flex items-center gap-1 bg-lib-accent-light text-lib-accent-hover border border-lib-accent">
+                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                    </svg>
+                                                    期限切れ
+                                                </span>
+                                            @else
+                                                {{-- 貸出中: プライマリカラー（スチールブルー） --}}
+                                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full flex items-center gap-1 bg-lib-primary-light text-lib-primary-hover border border-lib-primary">
+                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                                    </svg>
+                                                    貸出中
+                                                </span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
-                    <p class="text-gray-500 text-lg mb-4">現在借りられている本はありません</p>
-                    <a href="{{ route('books.index') }}" 
-                        class="inline-block px-6 py-3 bg-[#295d72] text-white rounded-md hover:bg-[#3a7a94] transition-colors">
-                        書籍一覧を見る
-                    </a>
-                </div>
-            @endif
+                @else
+                    <div class="text-center py-12">
+                        <div class="text-6xl mb-4">
+                            <img src="{{ asset('images/Library1.png') }}" alt="本" class="w-auto h-32 mx-auto">
+                        </div>
+                        <p class="text-lib-text-secondary text-lg mb-4">貸出履歴がありません</p>
+                        <x-button :href="route('books.index')" variant="primary" size="lg">
+                            書籍一覧を見る
+                        </x-button>
+                    </div>
+                @endif
+            </div>
         </div>
     </div>
 </x-app-layout>

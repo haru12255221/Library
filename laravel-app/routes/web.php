@@ -24,12 +24,17 @@ Route::middleware('auth')->group(function () {
     Route::post('/loans/return/{loan}', [LoanController::class, 'returnBook'])->name('loans.return');
 });
 
-// 認証済みユーザー用ルート（管理者権限を一時的に削除）
+// 認証済みユーザー用ルート（書籍管理）
 Route::middleware(['auth'])->group(function () {
-    // 書籍管理
     Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
     Route::post('/books', [BookController::class, 'store'])->name('books.store');
-    
+});
+
+// 書籍詳細は最後に配置（ワイルドカードルートのため）
+Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
+
+// 認証済みユーザー用ルート（管理者権限を一時的に削除）
+Route::middleware(['auth'])->group(function () {
     // 貸出管理
     Route::get('/loans', [LoanController::class, 'index'])->name('loans.index');
 });
