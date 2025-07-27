@@ -4,7 +4,11 @@
     </div>
 
     <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    @if (session('status'))
+        <x-alert type="info">
+            {{ session('status') }}
+        </x-alert>
+    @endif
 
     <form method="POST" action="{{ route('password.email') }}">
         @csrf
@@ -17,9 +21,9 @@
         </div>
 
         <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
+            <x-button type="submit" variant="primary">
                 {{ __('Email Password Reset Link') }}
-            </x-primary-button>
+            </x-button>
         </div>
     </form>
 </x-guest-layout>
