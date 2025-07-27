@@ -13,7 +13,7 @@ export default {
         extend: {
             colors: {
                 primary: '#3d7ca2',
-                success: '#d6e185',
+                success: '#669C6F',
                 danger: '#e3595b',
                 'primary-hover': '#2a5a7a',
                 'success-hover': '#c4d470',
@@ -24,6 +24,8 @@ export default {
                 'text-secondary': '#6b7280',
                 'text-light': '#9ca3af',
                 'text-white': '#ffffff',
+                'border-neutral': '#9ca3af',
+                'border-light': '#d1d5db',
             },
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],

@@ -81,6 +81,7 @@ class BookController extends Controller
 
         // GoogleBooksServiceを使用
         $bookData = $this->googleBooksService->fetchByIsbn($isbn);
+        dd($bookData);
 
         if ($bookData) {
             Log::info("Book found: {$bookData['title']}");

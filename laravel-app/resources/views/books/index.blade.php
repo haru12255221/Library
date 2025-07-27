@@ -13,10 +13,10 @@
         @endif
 
         <!-- 検索フォーム -->
-        <div class="bg-white rounded-lg shadow p-6 mb-8" x-data="searchForm()">
+        <div class="bg-background rounded-lg shadow p-6 mb-8" x-data="searchForm()">
             <form action="{{ route('books.index') }}" method="GET" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-[#4f4f4f] mb-2">検索キーワード</label>
+                    <label class="block text-sm font-medium text-text-text-primary mb-2">検索キーワード</label>
                     <div class="relative">
                         <input 
                             type="text" 
@@ -24,7 +24,7 @@
                             x-model="searchQuery"
                             placeholder="タイトルまたは著者で検索" 
                             value="{{ request('search') }}"
-                            class="w-full px-3 py-2 pr-20 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#295d72] focus:border-transparent"
+                            class="w-full px-3 py-2 pr-20 border border-border-light rounded-md focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-transparent"
                             @input="handleInput"
                         >
                         <!-- クリアボタン -->
@@ -80,7 +80,7 @@
         <!-- 書籍一覧 -->
         <div class="bg-white rounded-lg shadow">
             <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                <h2 class="text-lg font-semibold text-[#4f4f4f]">書籍一覧</h2>
+                <h2 class="text-lg font-semibold text-text-text-primary">書籍一覧</h2>
                 
                 @auth
                     @if(auth()->user()->isAdmin())
@@ -102,10 +102,10 @@
                 @if($books->count() > 0)
                     <div class="grid gap-4">
                         @foreach($books as $book)
-                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md hover:border-[#295d72] transition-all">
+                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md hover:border-primary-hover transition-all">
                                 <!-- 詳細ページへのリンク -->
                                 <a href="{{ route('books.show', $book) }}" class="block mb-3 group">
-                                    <div class="flex items-center gap-2 text-sm text-[#295d72] group-hover:text-[#3a7a94] transition-colors">
+                                    <div class="flex items-center gap-2 text-sm text-primary-hover group-hover:text-[#3a7a94] transition-colors">
                                         <span>詳細を見る</span>
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -130,7 +130,7 @@
                                     
                                     <!-- 書籍情報 -->
                                     <div class="flex-1 min-w-0">
-                                        <h3 class="text-lg font-semibold text-[#4f4f4f] mb-1 truncate">{{ $book->title }}</h3>
+                                        <h3 class="text-lg font-semibold text-text-text-primary mb-1 truncate">{{ $book->title }}</h3>
                                         <p class="text-gray-600 mb-1">著者: {{ $book->formatted_author }}</p>
                                         
                                         <!-- 拡張情報 -->

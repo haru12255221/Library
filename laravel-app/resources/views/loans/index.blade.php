@@ -1,19 +1,19 @@
 <x-app-layout>
-    <div class="bg-white rounded-lg shadow">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg font-semibold text-[#4f4f4f]">
+    <div class="bg-background rounded-lg shadow m-4">
+        <div class="px-6 py-4 border-b border-border-light">
+            <h3 class="text-lg font-semibold text-text-primary">
                 貸出履歴一覧 (全{{ $loans->count() }}件)
             </h3>
         </div>
-        <div class="p-6">
+        <div class="p-6 m-4">
             @if($loans->count() > 0)
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                    <table class="min-w-full divide-y divide-border-light">
+                        <thead class="bg-background">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">書籍情報</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">借主</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">書籍情報</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">借主</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                                     @php
                                         $linkDirection = ($sort === 'borrowed_at' && $direction === 'asc') ? 'desc' : 'asc';
                                     @endphp
@@ -24,7 +24,7 @@
                                         @endif
                                     </a>
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                                     @php
                                         $linkDirection = ($sort === 'due_date' && $direction === 'asc') ? 'desc' : 'asc';
                                     @endphp
@@ -35,7 +35,7 @@
                                         @endif
                                     </a>
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                                     @php
                                         $linkDirection = ($sort === 'status' && $direction === 'asc') ? 'desc' : 'asc';
                                     @endphp
@@ -48,16 +48,16 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody class="bg-background divide-y divide-border-light">
                             @foreach($loans as $loan)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900">{{ $loan->book->title }}</div>
-                                        <div class="text-sm text-gray-500">著者: {{ $loan->book->author }}</div>
+                                        <div class="text-sm font-medium text-text-primary">{{ $loan->book->title }}</div>
+                                        <div class="text-sm text-text-secondary">著者: {{ $loan->book->author }}</div>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $loan->user->name }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $loan->borrowed_at->format('Y/m/d') }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $loan->due_date->format('Y/m/d') }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">{{ $loan->user->name }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">{{ $loan->borrowed_at->format('Y/m/d') }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">{{ $loan->due_date->format('Y/m/d') }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         {{-- ▼ここがポイント！▼ --}}
                                         @if ($loan->returned_at)
@@ -88,7 +88,7 @@
                     <div class="text-6xl mb-4">
                         <img src="{{ asset('images/Library1.png') }}" alt="本" class="w-auto h-32 mx-auto">
                     </div>
-                    <p class="text-gray-500 text-lg mb-4">現在借りられている本はありません</p>
+                    <p class="text-text-secondary text-lg mb-4">現在借りられている本はありません</p>
                     <a href="{{ route('books.index') }}" 
                         class="inline-block px-6 py-3 bg-[#295d72] text-white rounded-md hover:bg-[#3a7a94] transition-colors">
                         書籍一覧を見る

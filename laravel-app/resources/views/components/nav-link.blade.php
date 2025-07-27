@@ -1,11 +1,18 @@
-@props(['active'])
+@props([
+    'href',
+    'activeRoutes' => [],
+])
 
 @php
-$classes = ($active ?? false)
-            ? 'inline-flex items-center px-1 pt-1 text-sm font-semibold leading-5 text-primary focus:outline-none transition duration-150 ease-in-out no-underline'
-            : 'inline-flex items-center px-1 pt-1 text-sm font-medium leading-5 text-text-primary hover:underline focus:outline-none focus:underline transition duration-150 ease-in-out';
+    $routes = is_array($activeRoutes) ? $activeRoutes : [$activeRoutes];
+    $isActive = request()->routeIs(...$routes);
 @endphp
 
-<a {{ $attributes->merge(['class' => $classes]) }}>
-    {{ $slot }}
+<a href="{{ $href }}" class="relative pb-4 transition-colors text-text-primary hover:text-primary">
+    <span class="{{ $isActive ? 'font-semibold text-primary' : '' }}">
+        {{ $slot }}
+    </span>
+    @if($isActive)
+        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-full"></span>
+    @endif
 </a>

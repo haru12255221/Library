@@ -4,39 +4,30 @@
         <div class="flex justify-between items-center">
             <h1 class="text-2xl font-bold flex items-center text-text-primary">
                 <span><a href="{{ route('books.index') }}"><img src="{{ asset('images/Vector.png') }}" alt="本" class="pr-2 w-auto h-20 mx-auto"></a></span>
-                <span class="text-text-primary truncate max-w-[150px] md:max-w-none">「本見れたり、借りれたり」</span>
+                <span class="text-text-primary truncate max-w-[150px] md:max-w-none hidden lg:inline">「本見れたり、借りれたり」</span>
             </h1>
 
             <!-- デスクトップナビゲーション -->
             <nav class="hidden md:flex items-baseline gap-6 text-sm font-medium">
-                <a href="{{ route('books.index') }}" class="relative pb-4 transition-colors text-text-primary hover:text-primary">
-                    <span class="{{ request()->routeIs('books.index', 'home') ? 'font-semibold text-primary' : '' }}">書籍一覧</span>
-                    @if(request()->routeIs('books.index', 'home'))
-                        <span class="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-full"></span>
-                    @endif
-                </a>
+                <x-nav-link :href="route('books.index')" :activeRoutes="['books.index', 'home']">
+                    書籍一覧
+                </x-nav-link>
 
                 @auth
                     @if(auth()->user()->isAdmin())
-                        <a href="{{ route('books.create') }}" class="relative pb-4 transition-colors text-text-primary hover:text-primary">
-                            <span class="{{ request()->routeIs('books.create') ? 'font-semibold text-primary' : '' }}">書籍登録</span>
-                            @if(request()->routeIs('books.create'))
-                                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-full"></span>
-                            @endif
-                        </a>
-                        <a href="{{ route('loans.index') }}" class="relative pb-4 transition-colors text-text-primary hover:text-primary">
-                            <span class="{{ request()->routeIs('loans.index') ? 'font-semibold text-primary' : '' }}">貸出履歴</span>
-                            @if(request()->routeIs('loans.index'))
-                                <span class="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-full"></span>
-                            @endif
-                        </a>
+                        <x-nav-link :href="route('books.create')" :activeRoutes="'books.create'">
+                            書籍登録
+                        </x-nav-link>
+                        <x-nav-link :href="route('loans.index')" :activeRoutes="'loans.index'">
+                            貸出履歴
+                        </x-nav-link>
                     @endif
-                    <a href="{{ route('loans.my') }}" class="relative pb-4 transition-colors text-text-primary hover:text-primary">
-                        <span class="{{ request()->routeIs('loans.my') ? 'font-semibold text-primary' : '' }}">マイページ</span>
-                        @if(request()->routeIs('loans.my'))
-                            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-full"></span>
-                        @endif
-                    </a>
+
+                    <x-nav-link :href="route('loans.my')" :activeRoutes="'loans.my'">
+                        マイページ
+                    </x-nav-link>
+
+                    {{-- ログアウトはPOSTなのでそのまま --}}
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
                         <button type="submit" class="transition-colors text-text-primary hover:text-danger">
@@ -44,18 +35,12 @@
                         </button>
                     </form>
                 @else
-                    <a href="{{ route('login') }}" class="relative pb-4 transition-colors text-text-primary hover:text-primary">
-                        <span class="{{ request()->routeIs('login') ? 'font-semibold text-primary' : '' }}">ログイン</span>
-                        @if(request()->routeIs('login'))
-                            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-full"></span>
-                        @endif
-                    </a>
-                    <a href="{{ route('register') }}" class="relative pb-4 transition-colors text-text-primary hover:text-primary">
-                        <span class="{{ request()->routeIs('register') ? 'font-semibold text-primary' : '' }}">登録</span>
-                        @if(request()->routeIs('register'))
-                            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-full"></span>
-                        @endif
-                    </a>
+                    <x-nav-link :href="route('login')" :activeRoutes="'login'">
+                        ログイン
+                    </x-nav-link>
+                    <x-nav-link :href="route('register')" :activeRoutes="'register'">
+                        登録
+                    </x-nav-link>
                 @endauth
             </nav>
 
