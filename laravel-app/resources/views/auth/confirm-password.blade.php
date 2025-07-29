@@ -7,21 +7,25 @@
         @csrf
 
         <!-- Password -->
-        <div>
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+        <x-forms.form-group 
+            label="{{ __('Password') }}" 
+            name="password" 
+            required 
+            :error="$errors->first('password')">
+            
+            <x-text-input 
+                id="password" 
+                type="password"
+                name="password"
+                required 
+                autocomplete="current-password"
+                :hasError="$errors->has('password')" />
+        </x-forms.form-group>
 
         <div class="flex justify-end mt-4">
-            <x-primary-button>
+            <x-ui.button type="submit" variant="primary">
                 {{ __('Confirm') }}
-            </x-primary-button>
+            </x-ui.button>
         </div>
     </form>
 </x-guest-layout>

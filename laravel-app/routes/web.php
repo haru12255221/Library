@@ -11,7 +11,6 @@ Route::get('/books', [BookController::class, 'index'])->name('books.index');
 
 // 認証が必要なルート
 Route::middleware('auth')->group(function () {
-    // ダッシュボードは削除済み（図書館システムでは不要）
 
     // プロフィール管理
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -22,6 +21,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/my-loans', [LoanController::class, 'myLoans'])->name('loans.my');
     Route::post('/loans/borrow', [LoanController::class, 'borrow'])->name('loans.borrow');
     Route::post('/loans/return/{loan}', [LoanController::class, 'returnBook'])->name('loans.return');
+});
+
+// 管理者専用ルート（書籍管理）
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/books', [\App\Http\Controllers\Admin\BookController::class, 'index'])->name('books.index');
 });
 
 // 認証済みユーザー用ルート（書籍管理）

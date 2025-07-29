@@ -15,8 +15,8 @@
 
                 @auth
                     @if(auth()->user()->isAdmin())
-                        <x-nav-link :href="route('books.create')" :activeRoutes="'books.create'">
-                            書籍登録
+                        <x-nav-link :href="route('admin.books.index')" :activeRoutes="'admin.books.index'">
+                            書籍管理
                         </x-nav-link>
                         <x-nav-link :href="route('loans.index')" :activeRoutes="'loans.index'">
                             貸出履歴
@@ -59,21 +59,21 @@
     <!-- モバイルメニュー -->
     <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="md:hidden bg-white shadow-lg py-2">
         <div class="px-4 pt-2 pb-3 space-y-1">
-            <a href="{{ route('books.index') }}" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-gray-100 hover:text-primary {{ request()->routeIs('books.index', 'home') ? 'font-semibold text-primary' : '' }}">書籍一覧</a>
+            <a href="{{ route('books.index') }}" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-background hover:text-primary {{ request()->routeIs('books.index', 'home') ? 'font-semibold text-primary' : '' }}">書籍一覧</a>
 
             @auth
                 @if(auth()->user()->isAdmin())
-                    <a href="{{ route('books.create') }}" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-gray-100 hover:text-primary {{ request()->routeIs('books.create') ? 'font-semibold text-primary' : '' }}">書籍登録</a>
-                    <a href="{{ route('loans.index') }}" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-gray-100 hover:text-primary {{ request()->routeIs('loans.index') ? 'font-semibold text-primary' : '' }}">貸出履歴</a>
+                    <a href="{{ route('books.create') }}" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-background hover:text-primary {{ request()->routeIs('books.create') ? 'font-semibold text-primary' : '' }}">書籍登録</a>
+                    <a href="{{ route('loans.index') }}" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-background hover:text-primary {{ request()->routeIs('loans.index') ? 'font-semibold text-primary' : '' }}">貸出履歴</a>
                 @endif
-                <a href="{{ route('loans.my') }}" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-gray-100 hover:text-primary {{ request()->routeIs('loans.my') ? 'font-semibold text-primary' : '' }}">マイページ</a>
+                <a href="{{ route('loans.my') }}" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-background hover:text-primary {{ request()->routeIs('loans.my') ? 'font-semibold text-primary' : '' }}">マイページ</a>
                 <form method="POST" action="{{ route('logout') }}" class="block">
                     @csrf
-                    <button type="submit" @click="open = false" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-gray-100 hover:text-danger">ログアウト</button>
+                    <button type="submit" @click="open = false" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-background hover:text-danger">ログアウト</button>
                 </form>
             @else
-                <a href="{{ route('login') }}" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-gray-100 hover:text-primary {{ request()->routeIs('login') ? 'font-semibold text-primary' : '' }}">ログイン</a>
-                <a href="{{ route('register') }}" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-gray-100 hover:text-primary {{ request()->routeIs('register') ? 'font-semibold text-primary' : '' }}">登録</a>
+                <a href="{{ route('login') }}" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-background hover:text-primary {{ request()->routeIs('login') ? 'font-semibold text-primary' : '' }}">ログイン</a>
+                <a href="{{ route('register') }}" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-background hover:text-primary {{ request()->routeIs('register') ? 'font-semibold text-primary' : '' }}">登録</a>
             @endauth
         </div>
     </div>

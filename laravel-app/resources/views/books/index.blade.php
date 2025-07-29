@@ -4,16 +4,13 @@
     <div class="max-w-7xl mx-auto px-4">
         <!-- 成功メッセージ -->
         @if(session('success'))
-            <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-md mb-6 flex items-center gap-2">
-                <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
+            <x-ui.alert type="success" dismissible class="mb-6">
                 {{ session('success') }}
-            </div>
+            </x-ui.alert>
         @endif
 
         <!-- 検索フォーム -->
-        <div class="bg-background rounded-lg shadow p-6 mb-8" x-data="searchForm()">
+        <x-ui.card class="mb-8" x-data="searchForm()">
             <form action="{{ route('books.index') }}" method="GET" class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium text-text-text-primary mb-2">検索キーワード</label>
@@ -42,30 +39,37 @@
                     </div>
                 </div>
                 
-                <div class="flex gap-3 pt-4">
-                    <button 
+                <div class="flex flex-col sm:flex-row gap-3 pt-4">
+                    <x-ui.button 
                         type="submit"
-                        class="px-6 py-2 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors" 
-                        style="background-color: #3d7ca2; --tw-ring-color: #3d7ca2;" 
-                        onmouseover="this.style.backgroundColor='#2a5a7a'" 
-                        onmouseout="this.style.backgroundColor='#3d7ca2'"
+                        variant="primary"
+                        size="lg"
+                        class="w-full sm:w-auto min-h-[44px]"
+                        x-bind:disabled="isSearching"
+                        @click="isSearching = true"
                     >
-                        <span class="flex items-center gap-2">
+                        <span x-show="!isSearching" class="flex items-center justify-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                             検索
                         </span>
-                    </button>
+                        <span x-show="isSearching" class="flex items-center justify-center gap-2">
+                            <x-ui.loading type="spinner" size="sm" />
+                            検索中...
+                        </span>
+                    </x-ui.button>
                     
-                    <button 
+                    <x-ui.button 
                         type="button"
                         @click="resetForm"
                         x-show="searchQuery.length > 0 || hasSearchParam"
-                        class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                        variant="secondary"
+                        size="lg"
+                        class="w-full sm:w-auto min-h-[44px]"
                     >
                         リセット
-                    </button>
+                    </x-ui.button>
                 </div>
                 
                 <!-- 検索結果の件数表示 -->
@@ -75,34 +79,21 @@
                     </div>
                 @endif
             </form>
-        </div>
+        </x-ui.card>
 
         <!-- 書籍一覧 -->
-        <div class="bg-white rounded-lg shadow">
+        <x-ui.card padding="none">
             <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                 <h2 class="text-lg font-semibold text-text-text-primary">書籍一覧</h2>
                 
-                @auth
-                    @if(auth()->user()->isAdmin())
-                        <a href="{{ route('books.create') }}" 
-                           class="px-4 py-2 text-white rounded-md transition-colors flex items-center gap-2"
-                           style="background-color: #3d7ca2;" 
-                           onmouseover="this.style.backgroundColor='#2a5a7a'" 
-                           onmouseout="this.style.backgroundColor='#3d7ca2'">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                            </svg>
-                            書籍を登録
-                        </a>
-                    @endif
-                @endauth
+
             </div>
             
             <div class="p-6">
                 @if($books->count() > 0)
                     <div class="grid gap-4">
                         @foreach($books as $book)
-                            <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md hover:border-primary-hover transition-all">
+                            <x-ui.card padding="sm" class="hover:shadow-md hover:border-primary-hover transition-all">
                                 <!-- 詳細ページへのリンク -->
                                 <a href="{{ route('books.show', $book) }}" class="block mb-3 group">
                                     <div class="flex items-center gap-2 text-sm text-primary-hover group-hover:text-[#3a7a94] transition-colors">
@@ -163,9 +154,9 @@
                                             <form method="POST" action="{{ route('loans.borrow') }}" class="inline" onsubmit="return confirm('「{{ $book->title }}」を借りますか？')">
                                                 @csrf
                                                 <input type="hidden" name="book_id" value="{{ $book->id }}">
-                                                <button type="submit" class="px-4 py-2 text-white rounded-md transition-colors bg-primary hover:bg-primary-hover">
+                                                <x-ui.button type="submit" variant="primary">
                                                     借りる
-                                                </button>
+                                                </x-ui.button>
                                             </form>
                                         @endauth
                                     @elseif($book->isBorrowedByMe())
@@ -190,7 +181,9 @@
                                         @endif
                                     @endif
                                 </div>
-                            </div>
+                                
+
+                            </x-ui.card>
                         @endforeach
                     </div>
                 @else
@@ -199,13 +192,14 @@
                     </div>
                 @endif
             </div>
-        </div>
+        </x-ui.card>
 
         <script>
             function searchForm() {
                 return {
                     searchQuery: '{{ request('search') }}' || '',
                     hasSearchParam: {{ request('search') ? 'true' : 'false' }},
+                    isSearching: false,
                     
                     handleInput() {
                         // リアルタイム検索のためのデバウンス処理

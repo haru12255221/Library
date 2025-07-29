@@ -14,6 +14,8 @@ class BookController extends Controller
     public function __construct(GoogleBooksService $googleBooksService)
     {
         $this->googleBooksService = $googleBooksService;
+        
+
     }
     // Requestはクラス名、indexはメソッド名
     public function index(Request $request)
@@ -118,4 +120,6 @@ class BookController extends Controller
 
         return view('books.show', compact('book', 'relatedBooks'));
     }
+
+
 }

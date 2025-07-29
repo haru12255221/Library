@@ -12,12 +12,12 @@ export default {
     theme: {
         extend: {
             colors: {
-                primary: '#3d7ca2',
-                success: '#669C6F',
-                danger: '#e3595b',
-                'primary-hover': '#2a5a7a',
-                'success-hover': '#c4d470',
-                'danger-hover': '#d63d3f',
+                primary: '#a8c8e1',
+                success: '#b3d4b6',
+                danger: '#f1a5a8',
+                'primary-hover': '#8bb5d9',
+                'success-hover': '#9bc49f',
+                'danger-hover': '#ed8a8e',
                 background: '#f8f9fa',
                 'header-bg': '#ffffff',
                 'text-primary': '#4f4f4f',

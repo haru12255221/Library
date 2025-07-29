@@ -3,7 +3,7 @@
         <!-- 戻るボタン -->
         <div class="mb-6">
             <a href="{{ route('books.index') }}" 
-               class="inline-flex items-center gap-2 text-[#295d72] hover:text-[#3a7a94] transition-colors">
+               class="inline-flex items-center gap-2 text-primary hover:text-primary-hover transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                 </svg>
@@ -79,10 +79,9 @@
                                           onsubmit="return confirm('「{{ $book->title }}」を借りますか？')">
                                         @csrf
                                         <input type="hidden" name="book_id" value="{{ $book->id }}">
-                                        <button type="submit" 
-                                                class="px-6 py-3 text-white rounded-md transition-colors bg-[#295d72] hover:bg-[#3a7a94] font-medium">
+                                        <x-ui.button type="submit" variant="primary" size="lg">
                                             この本を借りる
-                                        </button>
+                                        </x-ui.button>
                                     </form>
                                 @else
                                     <p class="text-sm text-gray-500">ログインすると借りることができます</p>
@@ -114,27 +113,7 @@
                         @endif
                     </div>
 
-                    <!-- 管理者メニュー -->
-                    @if(auth()->check() && auth()->user()->role === 1)
-                        <div class="bg-blue-50 rounded-lg p-4 mb-6">
-                            <h3 class="text-lg font-semibold text-[#4f4f4f] mb-3">管理者メニュー</h3>
-                            <div class="flex gap-3">
-                                <a href="{{ route('books.edit', $book) }}" 
-                                   class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors">
-                                    編集
-                                </a>
-                                <form method="POST" action="{{ route('books.destroy', $book) }}" class="inline"
-                                      onsubmit="return confirm('「{{ $book->title }}」を削除しますか？この操作は取り消せません。')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" 
-                                            class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors">
-                                        削除
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    @endif
+
                 </div>
             </div>
 

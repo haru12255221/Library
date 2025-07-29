@@ -15,9 +15,16 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // ユーザーがログインしていない場合
+        if (!auth()->check()) {
+            abort(401, '認証が必要です');
+        }
+
+        // ユーザーが管理者でない場合
         if (!auth()->user()->isAdmin()) {
             abort(403, '管理者権限が必要です');
         }
+
         return $next($request);
     }
 }

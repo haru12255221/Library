@@ -10,16 +10,26 @@
         @csrf
 
         <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+        <x-forms.form-group 
+            label="{{ __('Email') }}" 
+            name="email" 
+            required 
+            :error="$errors->first('email')">
+            
+            <x-text-input 
+                id="email" 
+                type="email" 
+                name="email" 
+                :value="old('email')" 
+                required 
+                autofocus
+                :hasError="$errors->has('email')" />
+        </x-forms.form-group>
 
         <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
+            <x-ui.button type="submit" variant="primary">
                 {{ __('Email Password Reset Link') }}
-            </x-primary-button>
+            </x-ui.button>
         </div>
     </form>
 </x-guest-layout>

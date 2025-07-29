@@ -90,7 +90,7 @@
                     </div>
                     <p class="text-text-secondary text-lg mb-4">現在借りられている本はありません</p>
                     <a href="{{ route('books.index') }}" 
-                        class="inline-block px-6 py-3 bg-[#295d72] text-white rounded-md hover:bg-[#3a7a94] transition-colors">
+                        class="inline-block px-6 py-3 bg-primary text-text-white rounded-md hover:bg-primary transition-colors">
                         書籍一覧を見る
                     </a>
                 </div>
