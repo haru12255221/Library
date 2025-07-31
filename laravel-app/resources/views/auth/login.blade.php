@@ -1,6 +1,6 @@
 <x-app-layout>
     <div class="flex flex-col items-center pt-8">
-        <div class="w-full sm:max-w-md mt-6 px-6 py-8 bg-white shadow-md overflow-hidden sm:rounded-lg">
+        <div class="w-full sm:max-w-2xl md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mt-6 px-6 py-8 bg-white shadow-md overflow-hidden sm:rounded-lg">
 
             <div class="flex justify-center mb-4">
                 <a href="/">

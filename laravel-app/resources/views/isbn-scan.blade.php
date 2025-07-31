@@ -1,11 +1,11 @@
 <x-app-layout>
     <script src="https://unpkg.com/html5-qrcode"></script>
     
-    <div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="w-full sm:max-w-2xl md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto px-4 py-8">
         <!-- ヘッダー -->
         <div class="mb-8">
             <div class="flex items-center gap-4 mb-4">
-                <a href="{{ route('books.create') }}" 
+                <a href="{{ route('admin.books.create') }}" 
                    class="text-[#295d72] hover:text-[#3a7a94] transition-colors flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
@@ -13,13 +13,13 @@
                     書籍登録に戻る
                 </a>
                 <span class="text-gray-300">|</span>
-                <a href="{{ route('books.index') }}" 
+                <a href="{{ route('admin.books.index') }}" 
                    class="text-[#295d72] hover:text-[#3a7a94] transition-colors flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2v0"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v0M8 5a2 2 0 000 4h8a2 2 0 000-4M8 5v0"></path>
                     </svg>
-                    書籍一覧
+                    書籍管理
                 </a>
             </div>
             <h1 class="text-3xl font-bold text-[#4f4f4f] mb-2">📚 ISBNスキャン</h1>
@@ -93,7 +93,7 @@
                 </div>
 
                 <!-- 書籍情報フォーム -->
-                <form id="book-form" class="hidden" action="{{ route('books.store') }}" method="POST">
+                <form id="book-form" class="hidden" action="{{ route('admin.books.store') }}" method="POST">
                     @csrf
                     
                     <!-- 表紙画像 -->

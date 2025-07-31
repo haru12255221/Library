@@ -18,22 +18,34 @@ class GoogleBooksService
         try {
             $cleanIsbn = $this->cleanIsbn($isbn);
             
+            Log::info("Google Books API request: ISBN={$cleanIsbn}");
+            
             $response = Http::timeout(self::TIMEOUT_SECONDS)
                 ->get(self::API_BASE_URL, [
                     'q' => "isbn:{$cleanIsbn}",
                     'maxResults' => 1
                 ]);
 
-            if ($response->successful() && isset($response['items'][0])) {
-                return $this->parseVolumeInfo($response['items'][0]['volumeInfo']);
+            Log::info("Google Books API response status: " . $response->status());
+            
+            if ($response->successful()) {
+                $data = $response->json();
+                Log::info("Google Books API response data: " . json_encode($data));
+                
+                if (isset($data['items'][0])) {
+                    return $this->parseVolumeInfo($data['items'][0]['volumeInfo']);
+                }
+                
+                Log::info("Google Books API: No items found for ISBN {$isbn}");
+                return null;
             }
 
-            Log::info("Google Books API: No book found for ISBN {$isbn}");
-            return null;
+            Log::error("Google Books API HTTP Error: Status {$response->status()}, Body: " . $response->body());
+            throw new \Exception("Google Books API returned status {$response->status()}");
 
         } catch (\Exception $e) {
             Log::error("Google Books API Error: " . $e->getMessage());
-            return null;
+            throw $e; // エラーを再スローしてコントローラーで処理
         }
     }
 

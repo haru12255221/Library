@@ -1,7 +1,7 @@
 <x-app-layout>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-    <div class="max-w-7xl mx-auto px-4">
+    <div class="w-full sm:max-w-2xl md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto px-4">
         <!-- 成功メッセージ -->
         @if(session('success'))
             <x-ui.alert type="success" dismissible class="mb-6">
@@ -85,62 +85,41 @@
         <x-ui.card padding="none">
             <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                 <h2 class="text-lg font-semibold text-text-text-primary">書籍一覧</h2>
-                
-
             </div>
-            
             <div class="p-6">
                 @if($books->count() > 0)
-                    <div class="grid gap-4">
+                    <div class="grid gap-4 sm:gap-4">
                         @foreach($books as $book)
-                            <x-ui.card padding="sm" class="hover:shadow-md hover:border-primary-hover transition-all">
-                                <!-- 詳細ページへのリンク -->
-                                <a href="{{ route('books.show', $book) }}" class="block mb-3 group">
-                                    <div class="flex items-center gap-2 text-sm text-primary-hover group-hover:text-[#3a7a94] transition-colors">
-                                        <span>詳細を見る</span>
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                        </svg>
+                            <x-ui.card padding="sm" class="hover:shadow-md hover:border-primary-hover transition-all cursor-pointer">
+                                <!-- カード全体をクリッカブルに -->
+                                <a href="{{ route('books.show', $book) }}" class="block">
+                                    <div class="flex gap-3 flex-col sm:gap-4">
+                                        <!-- 表紙画像 -->
+                                        <div class="flex-shrink-0">
+                                            @if($book->thumbnail_url)
+                                                <img src="{{ $book->thumbnail_url }}" 
+                                                     alt="{{ $book->title }}の表紙" 
+                                                     class="w-12 h-16 sm:w-16 sm:h-20 object-cover rounded shadow-sm">
+                                            @else
+                                                <div class="w-12 h-16 sm:w-16 sm:h-20 bg-gray-200 rounded shadow-sm flex items-center justify-center">
+                                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                                                    </svg>
+                                                </div>
+                                            @endif
+                                        </div>
+                                        
+                                        <!-- 書籍情報 -->
+                                        <div class="flex-1 min-w-0">
+                                            <h3 class="text-base sm:text-lg font-semibold text-text-text-primary mb-1 truncate hover:text-primary transition-colors">{{ $book->title }}</h3>
+                                            <p class="text-gray-600 mb-1">著者: {{ $book->formatted_author }}</p>
+                                            @if($book->description)
+                                                <p class="text-sm text-gray-600 mb-2 line-clamp-2 flex-shrink-0">{{ Str::limit($book->description, 100) }}</p>
+                                            @endif
+                                        </div>
                                     </div>
                                 </a>
-                                <div class="flex gap-4">
-                                    <!-- 表紙画像 -->
-                                    <div class="flex-shrink-0">
-                                        @if($book->thumbnail_url)
-                                            <img src="{{ $book->thumbnail_url }}" 
-                                                 alt="{{ $book->title }}の表紙" 
-                                                 class="w-16 h-20 object-cover rounded shadow-sm">
-                                        @else
-                                            <div class="w-16 h-20 bg-gray-200 rounded shadow-sm flex items-center justify-center">
-                                                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                                                </svg>
-                                            </div>
-                                        @endif
-                                    </div>
-                                    
-                                    <!-- 書籍情報 -->
-                                    <div class="flex-1 min-w-0">
-                                        <h3 class="text-lg font-semibold text-text-text-primary mb-1 truncate">{{ $book->title }}</h3>
-                                        <p class="text-gray-600 mb-1">著者: {{ $book->formatted_author }}</p>
-                                        
-                                        <!-- 拡張情報 -->
-                                        @if($book->publisher)
-                                            <p class="text-sm text-gray-500 mb-1">出版社: {{ $book->formatted_publisher }}</p>
-                                        @endif
-                                        
-                                        @if($book->published_date)
-                                            <p class="text-sm text-gray-500 mb-1">出版日: {{ $book->formatted_published_date }}</p>
-                                        @endif
-                                        
-                                        @if($book->description)
-                                            <p class="text-sm text-gray-600 mb-2 line-clamp-2">{{ Str::limit($book->description, 100) }}</p>
-                                        @endif
-                                        
-                                        <!-- ISBN -->
-                                        <p class="text-xs text-gray-400 mb-2">ISBN: {{ $book->isbn }}</p>
-                                    </div>
-                                </div>
+                                
                                 
                                 <!-- 貸出状況 -->
                                 <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
@@ -151,7 +130,7 @@
                                             利用可能
                                         </span>
                                         @auth
-                                            <form method="POST" action="{{ route('loans.borrow') }}" class="inline" onsubmit="return confirm('「{{ $book->title }}」を借りますか？')">
+                                            <form method="POST" action="{{ route('loans.borrow') }}" class="inline" onsubmit="return confirm('「{{ $book->title }}」を借りますか？')" onclick="event.stopPropagation();">
                                                 @csrf
                                                 <input type="hidden" name="book_id" value="{{ $book->id }}">
                                                 <x-ui.button type="submit" variant="primary">
@@ -165,7 +144,7 @@
                                             <img src="{{ asset('images/library-borrowed.png') }}" alt="貸出中（あなた）" class="w-auto h-12">
                                             <span class="hidden md:inline">貸出中（あなた）</span>
                                         </span>
-                                        <a href="{{ route('loans.my') }}" class="text-sm underline transition-colors text-primary hover:text-primary-hover">
+                                        <a href="{{ route('loans.my') }}" class="text-sm underline transition-colors text-primary hover:text-primary-hover" onclick="event.stopPropagation();">
                                             マイページで返却する
                                         </a>
                                     @else
@@ -175,14 +154,13 @@
                                             <span class="hidden md:inline">貸出中です</span>
                                         </span>
                                         @if($book->currentLoan)
-                                            <span class="text-sm text-gray-500">
-                                                返却予定: {{ $book->currentLoan->due_date->format('Y/m/d') }}
+                                            <span class="text-sm text-gray-500 flex flex-col">
+                                                <span>返却予定:</span>
+                                                <span>{{ $book->currentLoan->due_date->format('Y/m/d') }}</span>
                                             </span>
                                         @endif
                                     @endif
                                 </div>
-                                
-
                             </x-ui.card>
                         @endforeach
                     </div>

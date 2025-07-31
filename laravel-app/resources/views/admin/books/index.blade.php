@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="w-full sm:max-w-2xl md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto px-4 py-8">
         <!-- ヘッダー -->
         <div class="mb-8">
             <div class="flex justify-between items-center">
@@ -8,7 +8,7 @@
                     <p class="text-text-secondary mt-2">管理者専用：書籍の登録・編集・削除</p>
                 </div>
                 
-                <x-ui.button href="{{ route('books.create') }}" variant="primary" size="lg">
+                <x-ui.button href="{{ route('admin.books.create') }}" variant="primary" size="lg">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                     </svg>
@@ -66,22 +66,19 @@
                                 書籍情報
                             </th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                ISBN
-                            </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                出版情報
-                            </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 貸出状況
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                操作
                             </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse($books as $book)
                             <tr class="hover:bg-gray-50">
-                                <!-- 書籍情報 -->
+                                <!-- 書籍情報（クリッカブル） -->
                                 <td class="px-6 py-4">
-                                    <div class="flex items-center">
+                                    <a href="{{ route('books.show', $book) }}" class="flex items-center cursor-pointer hover:bg-gray-100 -mx-6 -my-4 px-6 py-4 rounded transition-colors duration-200">
                                         @if($book->thumbnail_url)
                                             <img src="{{ $book->thumbnail_url }}" 
                                                  alt="{{ $book->title }}の表紙" 
@@ -94,29 +91,13 @@
                                             </div>
                                         @endif
                                         <div>
-                                            <div class="text-sm font-medium text-gray-900">
-                                                <a href="{{ route('books.show', $book) }}" class="hover:text-primary">
-                                                    {{ $book->title }}
-                                                </a>
+                                            <div class="text-sm font-medium text-gray-900 hover:text-primary">
+                                                {{ $book->title }}
                                             </div>
                                             <div class="text-sm text-gray-500">{{ $book->formatted_author }}</div>
+                                            <div class="text-xs text-gray-400 font-mono mt-1">ISBN: {{ $book->isbn }}</div>
                                         </div>
-                                    </div>
-                                </td>
-
-                                <!-- ISBN -->
-                                <td class="px-6 py-4 text-sm text-gray-900 font-mono">
-                                    {{ $book->isbn }}
-                                </td>
-
-                                <!-- 出版情報 -->
-                                <td class="px-6 py-4 text-sm text-gray-500">
-                                    @if($book->publisher)
-                                        <div>{{ $book->formatted_publisher }}</div>
-                                    @endif
-                                    @if($book->published_date)
-                                        <div>{{ $book->formatted_published_date }}</div>
-                                    @endif
+                                    </a>
                                 </td>
 
                                 <!-- 貸出状況 -->
@@ -136,10 +117,50 @@
                                         @endif
                                     @endif
                                 </td>
+
+                                <!-- 操作 -->
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center space-x-2">
+                                        <!-- 編集ボタン -->
+                                        <x-ui.button 
+                                            href="{{ route('admin.books.edit', $book) }}" 
+                                            variant="secondary" 
+                                            size="sm"
+                                            title="書籍を編集">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                            </svg>
+                                        </x-ui.button>
+
+                                        <!-- 削除ボタン -->
+                                        <form method="POST" action="{{ route('admin.books.destroy', $book) }}" 
+                                              onsubmit="return confirm('「{{ $book->title }}」を削除してもよろしいですか？\n\n※この操作は取り消せません。')" 
+                                              class="inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <x-ui.button 
+                                                type="submit" 
+                                                variant="danger" 
+                                                size="sm"
+                                                title="書籍を削除"
+                                                :disabled="!$book->isAvailable()">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                </svg>
+                                            </x-ui.button>
+                                        </form>
+                                    </div>
+                                    
+                                    @if(!$book->isAvailable())
+                                        <div class="text-xs text-gray-500 mt-1">
+                                            ※貸出中のため削除不可
+                                        </div>
+                                    @endif
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="px-6 py-12 text-center text-gray-500">
+                                <td colspan="3" class="px-6 py-12 text-center text-gray-500">
                                     @if(request('search'))
                                         「{{ request('search') }}」に該当する書籍が見つかりませんでした
                                     @else

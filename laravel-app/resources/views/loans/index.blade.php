@@ -1,11 +1,12 @@
 <x-app-layout>
-    <div class="bg-background rounded-lg shadow m-4">
+    <div class="w-full sm:max-w-2xl md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto px-4">
+        <div class="bg-background rounded-lg shadow">
         <div class="px-6 py-4 border-b border-border-light">
             <h3 class="text-lg font-semibold text-text-primary">
                 貸出履歴一覧 (全{{ $loans->count() }}件)
             </h3>
         </div>
-        <div class="p-6 m-4">
+        <div class="p-6">
             @if($loans->count() > 0)
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-border-light">
@@ -17,7 +18,7 @@
                                     @php
                                         $linkDirection = ($sort === 'borrowed_at' && $direction === 'asc') ? 'desc' : 'asc';
                                     @endphp
-                                    <a href="{{ route('loans.index', ['sort' => 'borrowed_at', 'direction' => $linkDirection]) }}">
+                                    <a href="{{ route('admin.loans.index', ['sort' => 'borrowed_at', 'direction' => $linkDirection]) }}">
                                         貸出日
                                         @if ($sort === 'borrowed_at')
                                             <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span>
@@ -28,7 +29,7 @@
                                     @php
                                         $linkDirection = ($sort === 'due_date' && $direction === 'asc') ? 'desc' : 'asc';
                                     @endphp
-                                    <a href="{{ route('loans.index', ['sort' => 'due_date', 'direction' => $linkDirection]) }}">
+                                    <a href="{{ route('admin.loans.index', ['sort' => 'due_date', 'direction' => $linkDirection]) }}">
                                         返却期限
                                         @if ($sort === 'due_date')
                                             <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span>
@@ -39,7 +40,7 @@
                                     @php
                                         $linkDirection = ($sort === 'status' && $direction === 'asc') ? 'desc' : 'asc';
                                     @endphp
-                                    <a href="{{ route('loans.index', ['sort' => 'status', 'direction' => $linkDirection]) }}">
+                                    <a href="{{ route('admin.loans.index', ['sort' => 'status', 'direction' => $linkDirection]) }}">
                                         状態
                                         @if ($sort === 'status')
                                             <span>{{ $direction === 'asc' ? '▲' : '▼' }}</span>
@@ -95,6 +96,7 @@
                     </a>
                 </div>
             @endif
+        </div>
         </div>
     </div>
 </x-app-layout>

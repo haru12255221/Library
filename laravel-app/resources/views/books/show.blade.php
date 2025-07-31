@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="max-w-4xl mx-auto px-4">
+    <div class="w-full sm:max-w-2xl md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto px-4">
         <!-- 戻るボタン -->
         <div class="mb-6">
             <a href="{{ route('books.index') }}" 

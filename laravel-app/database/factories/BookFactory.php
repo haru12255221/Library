@@ -23,6 +23,12 @@ class BookFactory extends Factory
             'title' => $this->faker->sentence(3),
             'author' => $this->faker->name(),
             'isbn' => $this->faker->isbn13(),
+            'publisher' => $this->faker->company(),
+            'published_date' => $this->faker->dateTimeBetween('-5 years', 'now'),
+            'description' => $this->faker->paragraph(3),
+            'thumbnail_url' => 'https://via.placeholder.com/300x400/' . 
+                              $this->faker->hexColor() . '/FFFFFF?text=' . 
+                              urlencode($this->faker->word()),
             'created_at' => now(),
             'updated_at' => now(),
         ];

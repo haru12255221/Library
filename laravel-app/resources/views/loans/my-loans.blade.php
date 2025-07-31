@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="max-w-7xl mx-auto px-4">
+    <div class="w-full sm:max-w-2xl md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto px-4">
         <!-- 成功・エラーメッセージ -->
         @if(session('success'))
             <div class="bg-green-100 border border-green-400 text-success px-4 py-3 rounded mb-6">

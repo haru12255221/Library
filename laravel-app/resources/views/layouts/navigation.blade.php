@@ -1,9 +1,9 @@
 <!-- 図書館管理システム統一ヘッダー -->
 <header class="shadow-md bg-header-bg" x-data="{ open: false }">
-    <div class="max-w-7xl mx-auto px-4 py-6">
+    <div class="w-full sm:max-w-2xl md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto px-4 py-6">
         <div class="flex justify-between items-center">
             <h1 class="text-2xl font-bold flex items-center text-text-primary">
-                <span><a href="{{ route('books.index') }}"><img src="{{ asset('images/Vector.png') }}" alt="本" class="pr-2 w-auto h-20 mx-auto"></a></span>
+                <span><a href="{{ route('books.index') }}"><img src="{{ asset('images/Vector.png') }}" alt="本" class="pr-2 w-auto h-12 sm:h-16 lg:h-20 mx-auto"></a></span>
                 <span class="text-text-primary truncate max-w-[150px] md:max-w-none hidden lg:inline">「本見れたり、借りれたり」</span>
             </h1>
 
@@ -18,7 +18,7 @@
                         <x-nav-link :href="route('admin.books.index')" :activeRoutes="'admin.books.index'">
                             書籍管理
                         </x-nav-link>
-                        <x-nav-link :href="route('loans.index')" :activeRoutes="'loans.index'">
+                        <x-nav-link :href="route('admin.loans.index')" :activeRoutes="'admin.loans.index'">
                             貸出履歴
                         </x-nav-link>
                     @endif
@@ -46,7 +46,7 @@
 
             <!-- モバイル用ハンバーガーボタン -->
             <div class="md:hidden flex items-center">
-                <button @click="open = !open" class="text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700">
+                <button @click="open = !open" class="min-h-[44px] min-w-[44px] p-2 flex items-center justify-center text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 focus:ring-2 focus:ring-primary focus:ring-opacity-50 rounded-md">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -63,8 +63,8 @@
 
             @auth
                 @if(auth()->user()->isAdmin())
-                    <a href="{{ route('books.create') }}" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-background hover:text-primary {{ request()->routeIs('books.create') ? 'font-semibold text-primary' : '' }}">書籍登録</a>
-                    <a href="{{ route('loans.index') }}" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-background hover:text-primary {{ request()->routeIs('loans.index') ? 'font-semibold text-primary' : '' }}">貸出履歴</a>
+                    <a href="{{ route('admin.books.create') }}" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-background hover:text-primary {{ request()->routeIs('admin.books.create') ? 'font-semibold text-primary' : '' }}">書籍登録</a>
+                    <a href="{{ route('admin.loans.index') }}" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-background hover:text-primary {{ request()->routeIs('admin.loans.index') ? 'font-semibold text-primary' : '' }}">貸出履歴</a>
                 @endif
                 <a href="{{ route('loans.my') }}" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-background hover:text-primary {{ request()->routeIs('loans.my') ? 'font-semibold text-primary' : '' }}">マイページ</a>
                 <form method="POST" action="{{ route('logout') }}" class="block">

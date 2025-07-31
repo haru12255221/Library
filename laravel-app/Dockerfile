@@ -6,8 +6,8 @@ WORKDIR /app
 # package.json と package-lock.json をコピー
 COPY package*.json ./
 
-# NPM依存関係をインストール
-RUN npm ci --only=production
+# NPM依存関係をインストール（ビルド用にdevDependenciesも含める）
+RUN npm ci
 
 # ソースコードをコピー
 COPY . .
@@ -42,7 +42,11 @@ RUN apk add --no-cache \
     nginx \
     supervisor \
     mysql-client \
-    redis
+    redis \
+    autoconf \
+    gcc \
+    g++ \
+    make
 
 # PHP拡張機能をインストール
 RUN docker-php-ext-install \

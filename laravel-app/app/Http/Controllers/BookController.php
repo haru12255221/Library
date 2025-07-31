@@ -81,32 +81,41 @@ class BookController extends Controller
         $isbn = $request->isbn;
         Log::info("Fetching book info for ISBN: {$isbn}");
 
-        // GoogleBooksServiceを使用
-        $bookData = $this->googleBooksService->fetchByIsbn($isbn);
-        dd($bookData);
+        try {
+            // GoogleBooksServiceを使用
+            $bookData = $this->googleBooksService->fetchByIsbn($isbn);
 
-        if ($bookData) {
-            Log::info("Book found: {$bookData['title']}");
+            if ($bookData) {
+                Log::info("Book found: {$bookData['title']}");
+                return response()->json([
+                    'success' => true,
+                    'data' => [
+                        'title' => $bookData['title'],
+                        'author' => $bookData['authors'],
+                        'publisher' => $bookData['publisher'],
+                        'published_date' => $bookData['published_date'],
+                        'description' => $bookData['description'],
+                        'thumbnail_url' => $bookData['thumbnail_url'],
+                        'page_count' => $bookData['page_count'],
+                        'language' => $bookData['language'],
+                    ]
+                ]);
+            }
+
+            Log::warning("No book found for ISBN: {$isbn}");
             return response()->json([
-                'success' => true,
-                'data' => [
-                    'title' => $bookData['title'],
-                    'author' => $bookData['authors'],
-                    'publisher' => $bookData['publisher'],
-                    'published_date' => $bookData['published_date'],
-                    'description' => $bookData['description'],
-                    'thumbnail_url' => $bookData['thumbnail_url'],
-                    'page_count' => $bookData['page_count'],
-                    'language' => $bookData['language'],
-                ]
-            ]);
-        }
+                'success' => false,
+                'error' => '書籍が見つかりませんでした。手動で入力してください。'
+            ], 404);
 
-        Log::warning("No book found for ISBN: {$isbn}");
-        return response()->json([
-            'success' => false,
-            'error' => '書籍が見つかりませんでした。手動で入力してください。'
-        ], 404);
+        } catch (\Exception $e) {
+            Log::error("ISBN fetch error: " . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => 'API通信エラーが発生しました。インターネット接続を確認してください。',
+                'debug' => config('app.debug') ? $e->getMessage() : null
+            ], 500);
+        }
     }
 
     // 書籍詳細表示
@@ -121,5 +130,74 @@ class BookController extends Controller
         return view('books.show', compact('book', 'relatedBooks'));
     }
 
+    // 書籍編集フォーム表示
+    public function edit(Book $book)
+    {
+        Log::info("Book edit form accessed: {$book->title} (ID: {$book->id}) by user: " . auth()->id());
+        return view('books.edit', compact('book'));
+    }
 
+    // 書籍情報更新
+    public function update(Request $request, Book $book)
+    {
+        // バリデーション（編集時はISBNの重複チェックを現在の書籍を除外）
+        $request->validate([
+            'title' => 'required|max:255',
+            'author' => 'required|max:255',
+            'isbn' => 'required|regex:/^[0-9\-X]+$/|unique:books,isbn,' . $book->id,
+            'publisher' => 'nullable|max:255',
+            'published_date' => 'nullable|date|before_or_equal:today',
+            'description' => 'nullable|max:2000',
+            'thumbnail_url' => 'nullable|url',
+        ]);
+
+        try {
+            // 書籍情報を更新
+            $book->update([
+                'title' => $request->title,
+                'author' => $request->author,
+                'isbn' => $request->isbn,
+                'publisher' => $request->publisher,
+                'published_date' => $request->published_date,
+                'description' => $request->description,
+                'thumbnail_url' => $request->thumbnail_url,
+            ]);
+
+            Log::info("Book updated: {$book->title} (ID: {$book->id}) by user: " . auth()->id());
+
+            return redirect()->route('admin.books.index')
+                ->with('success', '書籍情報を更新しました');
+        } catch (\Exception $e) {
+            Log::error("Failed to update book: {$book->title} (ID: {$book->id}) by user: " . auth()->id() . " - Error: " . $e->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->with('error', '書籍情報の更新に失敗しました。しばらく時間をおいて再度お試しください。');
+        }
+    }
+
+    // 書籍削除
+    public function destroy(Book $book)
+    {
+        // 貸出中の書籍は削除できない
+        if (!$book->isAvailable()) {
+            Log::warning("Attempted to delete borrowed book: {$book->title} (ID: {$book->id}) by user: " . auth()->id());
+            return redirect()->back()
+                ->with('error', '貸出中の書籍は削除できません');
+        }
+
+        try {
+            $title = $book->title;
+            $bookId = $book->id;
+            $book->delete();
+
+            Log::info("Book deleted: {$title} (ID: {$bookId}) by user: " . auth()->id());
+
+            return redirect()->route('admin.books.index')
+                ->with('success', "「{$title}」を削除しました");
+        } catch (\Exception $e) {
+            Log::error("Failed to delete book: {$book->title} (ID: {$book->id}) by user: " . auth()->id() . " - Error: " . $e->getMessage());
+            return redirect()->back()
+                ->with('error', '書籍の削除に失敗しました。しばらく時間をおいて再度お試しください。');
+        }
+    }
 }

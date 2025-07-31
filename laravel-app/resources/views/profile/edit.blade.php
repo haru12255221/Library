@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="w-full sm:max-w-2xl md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <x-ui.card padding="lg">
                 <div class="max-w-xl">
                     @include('profile.partials.update-profile-information-form')

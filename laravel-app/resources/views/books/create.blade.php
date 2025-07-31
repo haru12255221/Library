@@ -1,16 +1,16 @@
 <x-app-layout>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
-    <div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="w-full sm:max-w-2xl md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto px-4 py-8">
         <!-- ヘッダー -->
         <div class="mb-8">
             <div class="flex items-center gap-4 mb-4">
-                <a href="{{ route('books.index') }}" 
+                <a href="{{ route('admin.books.index') }}" 
                    class="text-primary hover:text-primary-hover transition-colors flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
-                    書籍一覧に戻る
+                    書籍管理に戻る
                 </a>
             </div>
             <h1 class="text-3xl font-bold text-text-primary">書籍登録</h1>
@@ -87,7 +87,7 @@
                     書籍情報
                 </h2>
                 
-                <form action="{{ route('books.store') }}" method="POST" class="space-y-4" x-data="bookForm()" @submit="handleSubmit">
+                <form action="{{ route('admin.books.store') }}" method="POST" class="space-y-4" x-data="bookForm()" @submit="handleSubmit">
                     @csrf
                     
                     <!-- 基本情報 -->
@@ -216,7 +216,7 @@
                         </x-ui.button>
                         
                         <x-ui.button 
-                            href="{{ route('books.index') }}" 
+                            href="{{ route('admin.books.index') }}" 
                             variant="secondary"
                             size="lg">
                             キャンセル

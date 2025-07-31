@@ -7,7 +7,7 @@
 @php
 $paddingClasses = [
     'none' => '',
-    'sm' => 'p-4',
+    'sm' => 'p-4 sm:p-4',
     'default' => 'p-6',
     'lg' => 'p-8'
 ];
