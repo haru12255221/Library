@@ -12,9 +12,18 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // ミドルウェアエイリアス設定
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'force.https' => \App\Http\Middleware\ForceHttps::class,
         ]);
+
+        // グローバルミドルウェア設定（本番環境でのHTTPS強制）
+        if (app()->environment('production')) {
+            $middleware->web(prepend: [
+                \App\Http\Middleware\ForceHttps::class,
+            ]);
+        }
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

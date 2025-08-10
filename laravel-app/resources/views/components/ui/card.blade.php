@@ -25,7 +25,7 @@ $borderClasses = $border ? 'border border-gray-200' : '';
 $classes = $baseClasses . ' ' . $shadowClasses[$shadow] . ' ' . $borderClasses . ' ' . $paddingClasses[$padding];
 @endphp
 
-<div {{ $attributes->merge(['class' => $classes]) }}>
+<section {{ $attributes->merge(['class' => $classes]) }}>
     @isset($header)
         <div class="border-b border-gray-200 pb-4 mb-4">
             {{ $header }}
@@ -41,4 +41,4 @@ $classes = $baseClasses . ' ' . $shadowClasses[$shadow] . ' ' . $borderClasses .
             {{ $footer }}
         </div>
     @endisset
-</div>
+</section>

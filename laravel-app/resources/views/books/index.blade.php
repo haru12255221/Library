@@ -88,7 +88,7 @@
             </div>
             <div class="p-6">
                 @if($books->count() > 0)
-                    <div class="grid gap-4 sm:gap-4">
+                    <div class="space-y-4">
                         @foreach($books as $book)
                             <x-ui.card padding="sm" class="hover:shadow-md hover:border-primary-hover transition-all cursor-pointer">
                                 <!-- カード全体をクリッカブルに -->
@@ -154,7 +154,7 @@
                                             <span class="hidden md:inline">貸出中です</span>
                                         </span>
                                         @if($book->currentLoan)
-                                            <span class="text-sm text-gray-500 flex flex-col">
+                                            <span class="text-sm text-gray-500 flex flex-wrap">
                                                 <span>返却予定:</span>
                                                 <span>{{ $book->currentLoan->due_date->format('Y/m/d') }}</span>
                                             </span>

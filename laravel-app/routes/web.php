@@ -5,6 +5,15 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\LoanController;
 use Illuminate\Support\Facades\Route;
 
+// ヘルスチェックエンドポイント
+Route::get('/health', function () {
+    return response()->json([
+        'status' => 'ok',
+        'timestamp' => now()->toISOString(),
+        'environment' => app()->environment(),
+    ]);
+});
+
 // パブリックルート（認証不要）
 Route::get('/', [BookController::class, 'index'])->name('home');
 Route::get('/books', [BookController::class, 'index'])->name('books.index');
