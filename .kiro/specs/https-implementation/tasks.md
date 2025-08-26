@@ -6,7 +6,7 @@
 
 ## 実装タスク
 
-- [ ] 1.0 Docker設定ファイルの統合と整理
+- [x] 1.0 Docker設定ファイルの統合と整理
   - laravel-app/docker-compose.local.yml、docker-compose.production.ymlの削除
   - laravel-app/Dockerfile.localの削除
   - ルートディレクトリのdocker-compose.ymlを開発環境専用に統一
@@ -27,7 +27,7 @@
   - セキュリティヘッダー設定済み
   - _要件: 4.1, 4.2, 4.3, 4.4_
 
-- [ ] 2.3 vantanlib.com用環境変数の更新
+- [x] 2.3 vantanlib.com用環境変数の更新
   - laravel-app/.env.productionをvantanlib.com用に完全更新
   - 本番環境用データベース設定の追加
   - セキュリティ設定の強化（セキュアクッキー、ドメイン設定）
@@ -41,7 +41,7 @@
   - Nginx自動リロード機能実装済み
   - _要件: 2.3, 5.2, 5.3_
 
-- [ ] 2.1 vantanlib.com用Docker Compose設定の作成
+- [x] 2.1 vantanlib.com用Docker Compose設定の作成
   - docker-compose.prod.ymlをvantanlib.com用に完全書き換え
   - Certbotコンテナの追加（vantanlib.com + www.vantanlib.com対応）
   - 本番環境用Nginxコンテナ設定（ポート80/443）
@@ -49,7 +49,7 @@
   - 証明書用ボリュームマウント設定
   - _要件: 2.1, 5.1_
 
-- [ ] 2.2 vantanlib.com用Nginx設定の作成
+- [x] 2.2 vantanlib.com用Nginx設定の作成
   - docker/nginx/default.prod.confをvantanlib.com用に更新
   - www.vantanlib.com → vantanlib.comリダイレクト設定
   - HTTP/2対応とセキュリティヘッダー強化
@@ -88,7 +88,7 @@
   - API連携の自動テストスイートを作成
   - _要件: 1.4, 6.3_
 
-- [ ] 4.1 vantanlib.com用証明書更新スクリプトの作成
+- [x] 4.1 vantanlib.com用証明書更新スクリプトの作成
   - scripts/renew-ssl.shをvantanlib.com用に完全書き換え
   - dry-run事前チェック機能の実装
   - 詳細ログ出力とメール通知機能の実装
@@ -125,7 +125,7 @@
   - ヘルスチェック機能の実装
   - _要件: 7.1, 7.2, 7.3, 7.4_
 
-- [ ] 5.3 パフォーマンス最適化の実装
+- [x] 5.3 パフォーマンス最適化の実装
   - SSL セッションキャッシュの設定
   - HTTP/2プロトコルの有効化（既に設定済み）
   - 静的ファイル配信の最適化
