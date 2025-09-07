@@ -1,5 +1,6 @@
 <x-app-layout>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
 
     <div class="w-full sm:max-w-2xl md:max-w-4xl lg:max-w-6xl xl:max-w-7xl mx-auto px-4">
         <!-- 成功メッセージ -->
@@ -18,8 +19,9 @@
                         <input 
                             type="text" 
                             name="search" 
+                            id="search-input"
                             x-model="searchQuery"
-                            placeholder="タイトルまたは著者で検索" 
+                            placeholder="タイトル、著者、またはISBNで検索" 
                             value="{{ request('search') }}"
                             class="w-full px-3 py-2 pr-20 border border-border-light rounded-md focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-transparent"
                             @input="handleInput"
@@ -62,6 +64,23 @@
                     
                     <x-ui.button 
                         type="button"
+                        @click="startBarcodeScanning"
+                        variant="secondary"
+                        size="lg"
+                        class="w-full sm:w-auto min-h-[44px]"
+                        id="barcode-scan-btn"
+                    >
+                        <span class="flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2-2V9z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            バーコードスキャン
+                        </span>
+                    </x-ui.button>
+                    
+                    <x-ui.button 
+                        type="button"
                         @click="resetForm"
                         x-show="searchQuery.length > 0 || hasSearchParam"
                         variant="secondary"
@@ -70,6 +89,22 @@
                     >
                         リセット
                     </x-ui.button>
+                </div>
+                
+                <!-- バーコードスキャナー -->
+                <div id="barcode-scanner" class="hidden mt-4">
+                    <div class="bg-gray-50 p-4 rounded-lg border">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="text-lg font-medium text-gray-900">バーコードスキャン</h3>
+                            <button type="button" onclick="stopBarcodeScanning()" class="text-gray-500 hover:text-gray-700">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div id="reader" class="border border-gray-300 rounded-md mx-auto" style="width: 100%; max-width: 300px;"></div>
+                        <div id="scan-result" class="mt-3 text-sm text-gray-600"></div>
+                    </div>
                 </div>
                 
                 <!-- 検索結果の件数表示 -->
@@ -173,6 +208,8 @@
         </x-ui.card>
 
         <script>
+            let html5QrcodeScanner = null;
+            
             function searchForm() {
                 return {
                     searchQuery: '{{ request('search') }}' || '',
@@ -204,8 +241,85 @@
                         if (this.searchQuery.trim().length > 0) {
                             document.querySelector('form').submit();
                         }
+                    },
+                    
+                    startBarcodeScanning() {
+                        startBarcodeScanning();
                     }
                 }
+            }
+
+            function startBarcodeScanning() {
+                const scannerDiv = document.getElementById('barcode-scanner');
+                const resultDiv = document.getElementById('scan-result');
+                
+                scannerDiv.classList.remove('hidden');
+                resultDiv.innerHTML = '<p class="text-blue-600">カメラを起動しています...</p>';
+                
+                try {
+                    html5QrcodeScanner = new Html5Qrcode("reader");
+                    html5QrcodeScanner.start(
+                        { facingMode: "environment" },
+                        { fps: 10, qrbox: 250 },
+                        onScanSuccess,
+                        onScanError
+                    );
+                } catch (error) {
+                    console.error("カメラの初期化に失敗:", error);
+                    resultDiv.innerHTML = '<p class="text-red-500">カメラの初期化に失敗しました</p>';
+                }
+            }
+
+            function stopBarcodeScanning() {
+                const scannerDiv = document.getElementById('barcode-scanner');
+                const resultDiv = document.getElementById('scan-result');
+                
+                if (html5QrcodeScanner) {
+                    html5QrcodeScanner.stop().then(() => {
+                        html5QrcodeScanner = null;
+                        scannerDiv.classList.add('hidden');
+                        resultDiv.innerHTML = '';
+                    }).catch(err => {
+                        console.error("カメラの停止に失敗:", err);
+                        scannerDiv.classList.add('hidden');
+                        resultDiv.innerHTML = '';
+                    });
+                } else {
+                    scannerDiv.classList.add('hidden');
+                    resultDiv.innerHTML = '';
+                }
+            }
+
+            function onScanSuccess(decodedText) {
+                // ISBNの基本チェック
+                if (!decodedText.startsWith('978') && !decodedText.startsWith('979')) {
+                    document.getElementById('scan-result').innerHTML = '<p class="text-red-500">これはISBNではありません: ' + decodedText + '</p>';
+                    return;
+                }
+
+                document.getElementById('scan-result').innerHTML = '<p class="text-green-600">✅ ISBN検出: ' + decodedText + '</p>';
+                
+                // 検索フィールドに値を設定
+                const searchInput = document.getElementById('search-input');
+                searchInput.value = decodedText;
+                
+                // Alpine.jsのデータも更新
+                const alpineData = Alpine.$data(searchInput.closest('[x-data]'));
+                if (alpineData) {
+                    alpineData.searchQuery = decodedText;
+                }
+                
+                // スキャナーを停止
+                stopBarcodeScanning();
+                
+                // 自動で検索を実行
+                setTimeout(() => {
+                    document.querySelector('form').submit();
+                }, 500);
+            }
+
+            function onScanError(errorMessage) {
+                // スキャンエラーは無視（連続スキャン中の正常な動作）
             }
         </script>
     </div>
