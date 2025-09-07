@@ -24,13 +24,40 @@ class BookController extends Controller
         $query = Book::query();
 
         if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                    ->orWhere('author', 'like', "%{$search}%");
-            });
+            Log::info("Book search initiated", ['search_term' => $search]);
+            
+            // 検索キーワードをトリムして空白を除去
+            $searchTerm = trim($search);
+            
+            if (!empty($searchTerm)) {
+                $query->where(function ($q) use ($searchTerm) {
+                    // ISBNかどうかを判定（数字とハイフンとXのみで構成されているか）
+                    $isIsbnLike = preg_match('/^[0-9X\-]+$/', $searchTerm);
+                    
+                    if ($isIsbnLike) {
+                        // ISBNの場合は完全一致のみ（ハイフンありなし両方対応）
+                        $cleanIsbn = preg_replace('/[^0-9X]/', '', $searchTerm);
+                        $q->where('isbn', '=', $searchTerm)
+                            ->orWhere('isbn', '=', $cleanIsbn);
+                    } else {
+                        // ISBN以外の場合は部分一致検索
+                        $q->where('title', 'like', "%{$searchTerm}%")
+                            ->orWhere('author', 'like', "%{$searchTerm}%")
+                            ->orWhere('publisher', 'like', "%{$searchTerm}%")
+                            ->orWhere('description', 'like', "%{$searchTerm}%");
+                    }
+                });
+            }
         }
 
-        $books = $query->with('currentLoan')->get();
+        $books = $query->with('currentLoan')->orderBy('created_at', 'desc')->get();
+        
+        if ($search) {
+            Log::info("Book search completed", [
+                'search_term' => $search,
+                'results_count' => $books->count()
+            ]);
+        }
 
         return view('books.index', compact('books', 'search'));
     }

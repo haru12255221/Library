@@ -19,7 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         // グローバルミドルウェア設定（本番環境でのHTTPS強制）
-        if (app()->environment('production')) {
+        if (env('APP_ENV') === 'production') {
             $middleware->web(prepend: [
                 \App\Http\Middleware\ForceHttps::class,
             ]);

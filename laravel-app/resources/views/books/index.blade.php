@@ -201,7 +201,21 @@
                     </div>
                 @else
                     <div class="text-center py-12">
-                        <p class="text-gray-500 text-lg">登録された書籍がありません</p>
+                        @if(request('search'))
+                            <div class="mb-4">
+                                <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                </svg>
+                                <p class="text-gray-500 text-lg mb-2">「{{ request('search') }}」に一致する書籍が見つかりませんでした</p>
+                                <p class="text-gray-400 text-sm">
+                                    検索のヒント：
+                                    <br>• タイトル、著者名、ISBN、出版社で検索できます
+                                    <br>• バーコードスキャン機能もお試しください
+                                </p>
+                            </div>
+                        @else
+                            <p class="text-gray-500 text-lg">登録された書籍がありません</p>
+                        @endif
                     </div>
                 @endif
             </div>
