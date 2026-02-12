@@ -23,10 +23,11 @@ class BookController extends Controller
         $query = Book::query();
 
         if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                    ->orWhere('author', 'like', "%{$search}%")
-                    ->orWhere('isbn', 'like', "%{$search}%");
+            $escaped = str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $search);
+            $query->where(function ($q) use ($escaped) {
+                $q->where('title', 'like', "%{$escaped}%")
+                    ->orWhere('author', 'like', "%{$escaped}%")
+                    ->orWhere('isbn', 'like', "%{$escaped}%");
             });
         }
 

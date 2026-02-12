@@ -75,7 +75,7 @@
                 <!-- 検索結果の件数表示 -->
                 @if(request('search'))
                     <div class="text-sm text-gray-600">
-                        「{{ request('search') }}」の検索結果: {{ $books->count() }}件
+                        「{{ request('search') }}」の検索結果: {{ $books->total() }}件
                     </div>
                 @endif
             </form>
@@ -189,6 +189,13 @@
                 @else
                     <div class="text-center py-12">
                         <p class="text-gray-500 text-lg">登録された書籍がありません</p>
+                    </div>
+                @endif
+
+                <!-- ページネーション -->
+                @if($books->hasPages())
+                    <div class="mt-6">
+                        {{ $books->links() }}
                     </div>
                 @endif
             </div>

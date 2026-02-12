@@ -27,11 +27,9 @@ php /var/www/artisan config:cache
 php /var/www/artisan route:cache
 php /var/www/artisan view:cache
 
-# データベースマイグレーション（本番環境では慎重に）
-if [ "$APP_ENV" != "production" ]; then
-    echo "Running database migrations..."
-    php /var/www/artisan migrate --force
-fi
+# データベースマイグレーション
+echo "Running database migrations..."
+php /var/www/artisan migrate --force
 
 # 権限の再設定
 chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache

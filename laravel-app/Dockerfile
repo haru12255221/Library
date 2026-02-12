@@ -45,8 +45,10 @@ RUN apk add --no-cache \
     redis
 
 # PHP拡張機能をインストール
-RUN docker-php-ext-install \
+RUN apk add --no-cache postgresql-dev \
+    && docker-php-ext-install \
     pdo_mysql \
+    pdo_pgsql \
     mbstring \
     exif \
     pcntl \

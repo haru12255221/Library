@@ -24,13 +24,14 @@ class BookController extends Controller
         $query = Book::query();
 
         if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                    ->orWhere('author', 'like', "%{$search}%");
+            $escaped = str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $search);
+            $query->where(function ($q) use ($escaped) {
+                $q->where('title', 'like', "%{$escaped}%")
+                    ->orWhere('author', 'like', "%{$escaped}%");
             });
         }
 
-        $books = $query->with('currentLoan')->get();
+        $books = $query->with('currentLoan')->paginate(20);
 
         return view('books.index', compact('books', 'search'));
     }
@@ -83,7 +84,6 @@ class BookController extends Controller
 
         // GoogleBooksServiceを使用
         $bookData = $this->googleBooksService->fetchByIsbn($isbn);
-        dd($bookData);
 
         if ($bookData) {
             Log::info("Book found: {$bookData['title']}");

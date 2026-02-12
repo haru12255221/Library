@@ -21,6 +21,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/my-loans', [LoanController::class, 'myLoans'])->name('loans.my');
     Route::post('/loans/borrow', [LoanController::class, 'borrow'])->name('loans.borrow');
     Route::post('/loans/return/{loan}', [LoanController::class, 'returnBook'])->name('loans.return');
+
+    // ISBNスキャン・検索（認証必須）
+    Route::get('/isbn-scan', function () {
+        return view('isbn-scan');
+    })->name('isbn.scan');
+    Route::post('/isbn-fetch', [BookController::class, 'fetchFromISBN'])->name('isbn.fetch');
 });
 
 // 管理者専用ルート（書籍管理）
@@ -28,8 +34,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/books', [\App\Http\Controllers\Admin\BookController::class, 'index'])->name('books.index');
 });
 
-// 認証済みユーザー用ルート（書籍管理）
-Route::middleware(['auth'])->group(function () {
+// 管理者専用ルート（書籍登録）
+Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
     Route::post('/books', [BookController::class, 'store'])->name('books.store');
 });
@@ -37,16 +43,10 @@ Route::middleware(['auth'])->group(function () {
 // 書籍詳細は最後に配置（ワイルドカードルートのため）
 Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
 
-// 認証済みユーザー用ルート（管理者権限を一時的に削除）
-Route::middleware(['auth'])->group(function () {
-    // 貸出管理
+// 管理者専用ルート（貸出管理）
+Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/loans', [LoanController::class, 'index'])->name('loans.index');
 });
-
-Route::get('/isbn-scan', function () {
-    return view('isbn-scan');
-});
-Route::post('/isbn-fetch', [\App\Http\Controllers\BookController::class, 'fetchFromISBN']);
 
 
 require __DIR__.'/auth.php';

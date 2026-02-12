@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(php artisan:*)",
+      "Bash(composer:*)",
+      "Bash(tree:*)",
+      "Bash(git add:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run:*)"
+    ]
+  }
+}
