@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Route;
 // パブリックルート（認証不要）
 Route::get('/', [BookController::class, 'index'])->name('home');
 Route::get('/books', [BookController::class, 'index'])->name('books.index');
-Route::get('/terms', fn () => view('legal.terms'))->name('legal.terms');
-Route::get('/privacy', fn () => view('legal.privacy'))->name('legal.privacy');
+Route::view('/terms', 'legal.terms')->name('legal.terms');
+Route::view('/privacy', 'legal.privacy')->name('legal.privacy');
 
 // 認証が必要なルート
 Route::middleware('auth')->group(function () {
@@ -25,9 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/loans/return/{loan}', [LoanController::class, 'returnBook'])->name('loans.return');
 
     // ISBNスキャン・検索（認証必須）
-    Route::get('/isbn-scan', function () {
-        return view('isbn-scan');
-    })->name('isbn.scan');
+    Route::view('/isbn-scan', 'isbn-scan')->name('isbn.scan');
     Route::post('/isbn-fetch', [BookController::class, 'fetchFromISBN'])->name('isbn.fetch');
 });
 
