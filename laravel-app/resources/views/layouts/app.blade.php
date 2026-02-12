@@ -15,13 +15,28 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-background">
+        <div class="min-h-screen bg-background flex flex-col">
             @include('layouts.navigation')
 
             <!-- Page Content -->
-            <main class="py-8">
+            <main class="py-8 flex-1">
                 {{ $slot }}
             </main>
+
+            <!-- Footer -->
+            <footer class="bg-white border-t border-border-light mt-auto">
+                <div class="max-w-7xl mx-auto px-4 py-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-text-secondary">
+                        <p>&copy; {{ date('Y') }} 学校図書管理システム「本見れたり、借りれたり」</p>
+                        <div class="flex items-center gap-4">
+                            <a href="{{ route('books.index') }}" class="hover:text-primary transition-colors">書籍一覧</a>
+                            @auth
+                                <a href="{{ route('loans.my') }}" class="hover:text-primary transition-colors">マイページ</a>
+                            @endauth
+                        </div>
+                    </div>
+                </div>
+            </footer>
         </div>
     </body>
 </html>

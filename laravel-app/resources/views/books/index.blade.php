@@ -151,13 +151,16 @@
                                             利用可能
                                         </span>
                                         @auth
-                                            <form method="POST" action="{{ route('loans.borrow') }}" class="inline" onsubmit="return confirm('「{{ $book->title }}」を借りますか？')">
-                                                @csrf
-                                                <input type="hidden" name="book_id" value="{{ $book->id }}">
-                                                <x-ui.button type="submit" variant="primary">
-                                                    借りる
-                                                </x-ui.button>
-                                            </form>
+                                            <x-ui.confirm-modal
+                                                title="貸出確認"
+                                                message="「{{ $book->title }}」を借りますか？"
+                                                :action="route('loans.borrow')"
+                                                confirm-text="借りる"
+                                                confirm-variant="primary"
+                                                :hidden-fields="['book_id' => $book->id]"
+                                            >
+                                                <x-ui.button variant="primary">借りる</x-ui.button>
+                                            </x-ui.confirm-modal>
                                         @endauth
                                     @elseif($book->isBorrowedByMe())
                                         {{-- 貸出中（あなた）: モバイルではアイコンのみ --}}

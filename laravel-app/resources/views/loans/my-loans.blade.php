@@ -86,14 +86,15 @@
                                     
                                     <!-- 返却ボタン -->
                                     <div class="ml-4">
-                                        <form method="POST" action="{{ route('loans.return', $loan) }}" 
-                                                onsubmit="return confirm('「{{ $loan->book->title }}」を返却しますか？')">
-                                            @csrf
-                                            <button type="submit" 
-                                                    class="px-4 py-2 bg-danger text-text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 hover:bg-danger-hover transition-colors">
-                                                返却する
-                                            </button>
-                                        </form>
+                                        <x-ui.confirm-modal
+                                            title="返却確認"
+                                            message="「{{ $loan->book->title }}」を返却しますか？"
+                                            :action="route('loans.return', $loan)"
+                                            confirm-text="返却する"
+                                            confirm-variant="danger"
+                                        >
+                                            <x-ui.button variant="danger">返却する</x-ui.button>
+                                        </x-ui.confirm-modal>
                                     </div>
                                 </div>
                             </div>
