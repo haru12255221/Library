@@ -33,6 +33,8 @@
                             @auth
                                 <a href="{{ route('loans.my') }}" class="hover:text-primary transition-colors">マイページ</a>
                             @endauth
+                            <a href="{{ route('legal.terms') }}" class="hover:text-primary transition-colors">利用規約</a>
+                            <a href="{{ route('legal.privacy') }}" class="hover:text-primary transition-colors">プライバシーポリシー</a>
                         </div>
                     </div>
                 </div>

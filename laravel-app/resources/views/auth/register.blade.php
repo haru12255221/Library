@@ -46,6 +46,12 @@
                     <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                 </div>
 
+                <div class="mt-4">
+                    <p class="text-xs text-gray-500">
+                        登録することで、<a href="{{ route('legal.terms') }}" target="_blank" class="underline text-primary hover:text-primary-hover">利用規約</a>および<a href="{{ route('legal.privacy') }}" target="_blank" class="underline text-primary hover:text-primary-hover">プライバシーポリシー</a>に同意したものとみなされます。
+                    </p>
+                </div>
+
                 <div class="flex items-center justify-end mt-4">
                     <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" href="{{ route('login') }}">
                         すでに登録済みの方はこちら

@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 // パブリックルート（認証不要）
 Route::get('/', [BookController::class, 'index'])->name('home');
 Route::get('/books', [BookController::class, 'index'])->name('books.index');
+Route::get('/terms', fn () => view('legal.terms'))->name('legal.terms');
+Route::get('/privacy', fn () => view('legal.privacy'))->name('legal.privacy');
 
 // 認証が必要なルート
 Route::middleware('auth')->group(function () {
