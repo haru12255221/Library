@@ -44,32 +44,41 @@ class BookController extends Controller
     // 書籍登録処理
     public function store(Request $request)
     {
-        // 拡張バリデーション
+        // バリデーション（ISBNのユニーク制約は削除 → 複数冊対応）
         $request->validate([
             'title' => 'required|max:255',
             'author' => 'required|max:255',
-            'isbn' => 'required|unique:books|regex:/^[0-9\-X]+$/',
+            'isbn' => 'required|regex:/^[0-9\-X]+$/',
             'publisher' => 'nullable|max:255',
             'published_date' => 'nullable|date|before_or_equal:today',
             'description' => 'nullable|max:2000',
             'thumbnail_url' => 'nullable|url',
         ]);
 
-        // データベースに保存（拡張フィールド対応）
+        // 同じISBNの最大copy_numberを取得して+1
+        $maxCopy = Book::where('isbn', $request->isbn)->max('copy_number') ?? 0;
+        $copyNumber = $maxCopy + 1;
+
+        // データベースに保存
         $book = Book::create([
             'title' => $request->title,
             'author' => $request->author,
             'isbn' => $request->isbn,
+            'copy_number' => $copyNumber,
             'publisher' => $request->publisher,
             'published_date' => $request->published_date,
             'description' => $request->description,
             'thumbnail_url' => $request->thumbnail_url,
         ]);
 
-        Log::info("Book registered: {$book->title} (ID: {$book->id})");
+        $copyLabel = $copyNumber > 1 ? "（冊{$copyNumber}）" : '';
+        Log::info("Book registered: {$book->title}{$copyLabel} (ID: {$book->id})");
 
-        // 一覧画面にリダイレクト
-        return redirect()->route('books.index')->with('success', '書籍を登録しました');
+        $message = $copyNumber > 1
+            ? "書籍を登録しました（{$copyNumber}冊目）"
+            : '書籍を登録しました';
+
+        return redirect()->route('books.index')->with('success', $message);
     } 
 
     // ISBN検索（拡張版）

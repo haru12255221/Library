@@ -11,12 +11,13 @@ class Book extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 
-        'author', 
-        'isbn', 
-        'publisher', 
-        'published_date', 
-        'description', 
+        'title',
+        'author',
+        'isbn',
+        'copy_number',
+        'publisher',
+        'published_date',
+        'description',
         'thumbnail_url'
     ];
 
@@ -102,5 +103,17 @@ class Book extends Model
     public function getFormattedAuthorAttribute(): string
     {
         return $this->author ?: '不明';
+    }
+
+    /**
+     * 冊番号付きの表示タイトルを取得する（2冊以上ある場合のみ表示）。
+     */
+    public function getDisplayTitleAttribute(): string
+    {
+        $totalCopies = static::where('isbn', $this->isbn)->count();
+        if ($totalCopies > 1) {
+            return "{$this->title} [冊{$this->copy_number}]";
+        }
+        return $this->title;
     }
 }

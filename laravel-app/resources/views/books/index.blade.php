@@ -121,7 +121,7 @@
                                     
                                     <!-- 書籍情報 -->
                                     <div class="flex-1 min-w-0">
-                                        <h3 class="text-lg font-semibold text-text-text-primary mb-1 truncate">{{ $book->title }}</h3>
+                                        <h3 class="text-lg font-semibold text-text-text-primary mb-1 truncate">{{ $book->display_title }}</h3>
                                         <p class="text-gray-600 mb-1">著者: {{ $book->formatted_author }}</p>
                                         
                                         <!-- 拡張情報 -->

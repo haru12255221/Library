@@ -35,7 +35,7 @@
                 <!-- 書籍情報 -->
                 <div class="md:w-2/3 p-8">
                     <!-- タイトル -->
-                    <h1 class="text-3xl font-bold text-[#4f4f4f] mb-4">{{ $book->title }}</h1>
+                    <h1 class="text-3xl font-bold text-[#4f4f4f] mb-4">{{ $book->display_title }}</h1>
                     
                     <!-- 基本情報 -->
                     <div class="space-y-3 mb-6">
