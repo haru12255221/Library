@@ -51,7 +51,7 @@
                         すでに登録済みの方はこちら
                     </a>
 
-                    <button type="submit" class="ms-4 inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-primary-hover focus:bg-primary-hover active:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition ease-in-out duration-150">
+                    <button type="submit" class="ms-4 inline-flex items-center px-4 py-2 bg-[#a8c8e1] border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-[#8bb5d9] focus:bg-[#8bb5d9] active:bg-[#8bb5d9] focus:outline-none focus:ring-2 focus:ring-[#a8c8e1] focus:ring-offset-2 transition ease-in-out duration-150">
                         登録する
                     </button>
                 </div>
