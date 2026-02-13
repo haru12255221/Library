@@ -125,5 +125,52 @@ class BookController extends Controller
         return view('books.show', compact('book', 'relatedBooks'));
     }
 
+    // 書籍編集フォーム
+    public function edit(Book $book)
+    {
+        return view('books.edit', compact('book'));
+    }
 
+    // 書籍更新処理
+    public function update(Request $request, Book $book)
+    {
+        $request->validate([
+            'title' => 'required|max:255',
+            'author' => 'required|max:255',
+            'isbn' => 'required|regex:/^[0-9\-X]+$/',
+            'publisher' => 'nullable|max:255',
+            'published_date' => 'nullable|date|before_or_equal:today',
+            'description' => 'nullable|max:2000',
+            'thumbnail_url' => 'nullable|url',
+        ]);
+
+        $book->update([
+            'title' => $request->title,
+            'author' => $request->author,
+            'isbn' => $request->isbn,
+            'publisher' => $request->publisher,
+            'published_date' => $request->published_date,
+            'description' => $request->description,
+            'thumbnail_url' => $request->thumbnail_url,
+        ]);
+
+        Log::info("Book updated: {$book->title} (ID: {$book->id})");
+
+        return redirect()->route('books.show', $book)->with('success', '書籍情報を更新しました');
+    }
+
+    // 書籍削除処理
+    public function destroy(Book $book)
+    {
+        if (!$book->isAvailable()) {
+            return back()->with('error', '貸出中の書籍は削除できません');
+        }
+
+        $title = $book->title;
+        $book->delete();
+
+        Log::info("Book deleted: {$title} (ID: {$book->id})");
+
+        return redirect()->route('books.index')->with('success', "「{$title}」を削除しました");
+    }
 }

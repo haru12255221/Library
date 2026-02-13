@@ -34,10 +34,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/books', [\App\Http\Controllers\Admin\BookController::class, 'index'])->name('books.index');
 });
 
-// 管理者専用ルート（書籍登録）
+// 管理者専用ルート（書籍管理）
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
     Route::post('/books', [BookController::class, 'store'])->name('books.store');
+    Route::get('/books/{book}/edit', [BookController::class, 'edit'])->name('books.edit');
+    Route::put('/books/{book}', [BookController::class, 'update'])->name('books.update');
+    Route::delete('/books/{book}', [BookController::class, 'destroy'])->name('books.destroy');
 });
 
 // 書籍詳細は最後に配置（ワイルドカードルートのため）

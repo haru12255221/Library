@@ -11,6 +11,18 @@
             </a>
         </div>
 
+        <!-- フラッシュメッセージ -->
+        @if(session('success'))
+            <x-ui.alert type="success" dismissible class="mb-6">
+                {{ session('success') }}
+            </x-ui.alert>
+        @endif
+        @if(session('error'))
+            <x-ui.alert type="danger" dismissible class="mb-6">
+                {{ session('error') }}
+            </x-ui.alert>
+        @endif
+
         <!-- 書籍詳細 -->
         <div class="bg-white rounded-lg shadow-lg overflow-hidden">
             <div class="md:flex">
@@ -63,6 +75,27 @@
                             <span class="text-gray-800 font-mono">{{ $book->isbn }}</span>
                         </div>
                     </div>
+
+                    <!-- 管理者用ボタン -->
+                    @auth
+                        @if(auth()->user()->isAdmin())
+                            <div class="flex gap-3 mb-6">
+                                <x-ui.button href="{{ route('books.edit', $book) }}" variant="secondary" size="sm">
+                                    編集
+                                </x-ui.button>
+                                <x-ui.confirm-modal
+                                    title="書籍削除"
+                                    message="「{{ $book->title }}」を削除しますか？この操作は取り消せません。"
+                                    :action="route('books.destroy', $book)"
+                                    method="DELETE"
+                                    confirm-text="削除する"
+                                    confirm-variant="danger"
+                                >
+                                    <x-ui.button variant="danger" size="sm">削除</x-ui.button>
+                                </x-ui.confirm-modal>
+                            </div>
+                        @endif
+                    @endauth
 
                     <!-- 貸出状況 -->
                     <div class="bg-gray-50 rounded-lg p-4 mb-6">

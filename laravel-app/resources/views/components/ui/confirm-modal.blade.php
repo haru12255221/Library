@@ -85,6 +85,9 @@ $confirmClass = $confirmColors[$confirmVariant] ?? $confirmColors['primary'];
                     </button>
                     <form method="POST" action="{{ $action }}" class="flex-1">
                         @csrf
+                        @if(strtoupper($method) !== 'POST')
+                            @method($method)
+                        @endif
                         @foreach($hiddenFields as $fieldName => $fieldValue)
                             <input type="hidden" name="{{ $fieldName }}" value="{{ $fieldValue }}">
                         @endforeach
