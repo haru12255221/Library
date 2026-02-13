@@ -10,7 +10,7 @@
         @endif
 
         <!-- 検索フォーム -->
-        <x-ui.card class="mb-8" x-data="searchForm()">
+        <x-ui.card class="mb-8" x-data="searchForm()" x-init="window.addEventListener('pageshow', () => isSearching = false)">
             <form action="{{ route('books.index') }}" method="GET" class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium text-text-text-primary mb-2">検索キーワード</label>
