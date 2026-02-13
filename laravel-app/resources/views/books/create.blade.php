@@ -87,7 +87,7 @@
                     書籍情報
                 </h2>
                 
-                <form action="{{ route('books.store') }}" method="POST" class="space-y-4" x-data="bookForm()" @submit="handleSubmit">
+                <form action="{{ route('books.store') }}" method="POST" class="space-y-4" x-data="bookForm()" @submit.prevent="handleSubmit($el)">
                     @csrf
                     
                     <!-- 基本情報 -->
@@ -306,10 +306,10 @@
                     description: ''
                 },
                 
-                handleSubmit() {
+                handleSubmit(form) {
+                    if (this.isSubmitting) return;
                     this.isSubmitting = true;
-                    // フォームは通常のHTTP送信で処理されるため、
-                    // サーバーレスポンス後にリセットされる
+                    form.submit();
                 }
             };
             
