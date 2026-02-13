@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Http;
+use App\Services\BookSearchService;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,30 +22,26 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // ISBN検索API
 Route::get('/book/info/{isbn}', function (Request $request, $isbn) {
     try {
-        // Google Books APIを使用して書籍情報を取得
-        $url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" . urlencode($isbn);
-        $response = Http::get($url);
-        
-        if ($response->successful() && $response->json('totalItems') > 0) {
-            $bookInfo = $response->json('items')[0]['volumeInfo'];
-            
+        $service = app(BookSearchService::class);
+        $bookData = $service->fetchByIsbn($isbn);
+
+        if ($bookData) {
             return response()->json([
                 'success' => true,
                 'data' => [
-                    'title' => $bookInfo['title'] ?? 'タイトル不明',
-                    'author' => implode(', ', $bookInfo['authors'] ?? ['著者不明']),
+                    'title' => $bookData['title'],
+                    'author' => $bookData['authors'],
                     'isbn' => $isbn,
-                    'cover' => $bookInfo['imageLinks']['thumbnail'] ?? null,
+                    'cover' => $bookData['thumbnail_url'],
                 ]
             ]);
         }
-        // 書籍情報が見つからない、またはAPIリクエストが失敗した場合
+
         return response()->json([
             'success' => false,
             'error' => 'この ISBN の書籍情報が見つかりませんでした。'
         ], 404);
     } catch (\Exception $e) {
-        // 例外が発生した場合（ネットワークエラーなど）
         return response()->json([
             'success' => false,
             'error' => 'サーバーエラーが発生しました: ' . $e->getMessage()

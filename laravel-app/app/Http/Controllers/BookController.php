@@ -3,19 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
-use App\Services\GoogleBooksService;
+use App\Services\BookSearchService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class BookController extends Controller
 {
-    protected $googleBooksService;
+    protected $bookSearchService;
 
-    public function __construct(GoogleBooksService $googleBooksService)
+    public function __construct(BookSearchService $bookSearchService)
     {
-        $this->googleBooksService = $googleBooksService;
-        
-
+        $this->bookSearchService = $bookSearchService;
     }
     // Requestはクラス名、indexはメソッド名
     public function index(Request $request)
@@ -91,8 +89,7 @@ class BookController extends Controller
         $isbn = $request->isbn;
         Log::info("Fetching book info for ISBN: {$isbn}");
 
-        // GoogleBooksServiceを使用
-        $bookData = $this->googleBooksService->fetchByIsbn($isbn);
+        $bookData = $this->bookSearchService->fetchByIsbn($isbn);
 
         if ($bookData) {
             Log::info("Book found: {$bookData['title']}");
@@ -105,8 +102,6 @@ class BookController extends Controller
                     'published_date' => $bookData['published_date'],
                     'description' => $bookData['description'],
                     'thumbnail_url' => $bookData['thumbnail_url'],
-                    'page_count' => $bookData['page_count'],
-                    'language' => $bookData['language'],
                 ]
             ]);
         }
