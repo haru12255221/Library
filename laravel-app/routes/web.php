@@ -31,6 +31,7 @@ Route::middleware('auth')->group(function () {
 
 // 管理者専用ルート（書籍管理）
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/books', [\App\Http\Controllers\Admin\BookController::class, 'index'])->name('books.index');
 });
 

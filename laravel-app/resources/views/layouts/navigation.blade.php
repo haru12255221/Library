@@ -15,6 +15,9 @@
 
                 @auth
                     @if(auth()->user()->isAdmin())
+                        <x-nav-link :href="route('admin.dashboard')" :activeRoutes="'admin.dashboard'">
+                            ダッシュボード
+                        </x-nav-link>
                         <x-nav-link :href="route('admin.books.index')" :activeRoutes="'admin.books.index'">
                             書籍管理
                         </x-nav-link>
@@ -66,6 +69,7 @@
 
             @auth
                 @if(auth()->user()->isAdmin())
+                    <a href="{{ route('admin.dashboard') }}" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-background hover:text-primary {{ request()->routeIs('admin.dashboard') ? 'font-semibold text-primary' : '' }}">ダッシュボード</a>
                     <a href="{{ route('books.create') }}" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-background hover:text-primary {{ request()->routeIs('books.create') ? 'font-semibold text-primary' : '' }}">書籍登録</a>
                     <a href="{{ route('loans.index') }}" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-background hover:text-primary {{ request()->routeIs('loans.index') ? 'font-semibold text-primary' : '' }}">貸出履歴</a>
                     <a href="{{ route('loans.overdue') }}" @click="open = false" class="block px-3 py-2 rounded-md text-base font-medium text-text-primary hover:bg-background hover:text-primary {{ request()->routeIs('loans.overdue') ? 'font-semibold text-primary' : '' }}">延滞一覧</a>
