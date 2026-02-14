@@ -6,6 +6,17 @@
             </h3>
         </div>
         <div class="p-6 m-4">
+            @if(session('success'))
+                <x-ui.alert type="success" dismissible class="mb-6">
+                    {{ session('success') }}
+                </x-ui.alert>
+            @endif
+            @if(session('error'))
+                <x-ui.alert type="danger" dismissible class="mb-6">
+                    {{ session('error') }}
+                </x-ui.alert>
+            @endif
+
             @if($overdueLoans->count() > 0)
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-border-light">
@@ -16,6 +27,7 @@
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">貸出日</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">返却期限</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">延滞日数</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">操作</th>
                             </tr>
                         </thead>
                         <tbody class="bg-background divide-y divide-border-light">
@@ -37,6 +49,17 @@
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $overdueDays >= 7 ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800' }}">
                                             {{ $overdueDays }}日超過
                                         </span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <x-ui.confirm-modal
+                                            title="強制返却"
+                                            message="「{{ $loan->book->title }}」（借主: {{ $loan->user->name }}）を強制返却しますか？"
+                                            :action="route('loans.force-return', $loan)"
+                                            confirm-text="強制返却する"
+                                            confirm-variant="danger"
+                                        >
+                                            <x-ui.button variant="danger" size="sm">強制返却</x-ui.button>
+                                        </x-ui.confirm-modal>
                                     </td>
                                 </tr>
                             @endforeach

@@ -74,6 +74,21 @@ class LoanController extends Controller
         return redirect()->route('loans.my')->with('success', '本を返却しました！');
     }
 
+    // 強制返却（管理者用）
+    public function forceReturn(Loan $loan)
+    {
+        if ($loan->returned_at) {
+            return back()->with('error', 'この貸出は既に返却済みです');
+        }
+
+        $loan->update([
+            'returned_at' => now(),
+            'status' => Loan::STATUS_RETURNED,
+        ]);
+
+        return back()->with('success', "「{$loan->book->title}」を強制返却しました（借主: {$loan->user->name}）");
+    }
+
     // 延滞一覧（管理者用）
     public function overdue()
     {

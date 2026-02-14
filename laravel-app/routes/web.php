@@ -50,6 +50,7 @@ Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show')
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/loans', [LoanController::class, 'index'])->name('loans.index');
     Route::get('/loans/overdue', [LoanController::class, 'overdue'])->name('loans.overdue');
+    Route::post('/loans/{loan}/force-return', [LoanController::class, 'forceReturn'])->name('loans.force-return');
 });
 
 
