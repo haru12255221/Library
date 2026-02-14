@@ -74,6 +74,18 @@ class LoanController extends Controller
         return redirect()->route('loans.my')->with('success', '本を返却しました！');
     }
 
+    // 延滞一覧（管理者用）
+    public function overdue()
+    {
+        $overdueLoans = Loan::with(['user', 'book'])
+            ->whereNull('returned_at')
+            ->where('due_date', '<', now()->startOfDay())
+            ->orderBy('due_date', 'asc')
+            ->get();
+
+        return view('loans.overdue', compact('overdueLoans'));
+    }
+
     public function myLoans()
     {
         $myLoans = Loan::with('book')

@@ -49,6 +49,7 @@ Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show')
 // 管理者専用ルート（貸出管理）
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/loans', [LoanController::class, 'index'])->name('loans.index');
+    Route::get('/loans/overdue', [LoanController::class, 'overdue'])->name('loans.overdue');
 });
 
 
