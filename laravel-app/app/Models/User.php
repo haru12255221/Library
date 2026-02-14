@@ -47,6 +47,11 @@ class User extends Authenticatable
         ];
     }
 
+    public function loans()
+    {
+        return $this->hasMany(Loan::class);
+    }
+
     const ROLE_ADMIN = 1;
     const ROLE_USER = 2;
     
