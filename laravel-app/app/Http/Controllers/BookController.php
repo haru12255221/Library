@@ -122,7 +122,10 @@ class BookController extends Controller
             ->limit(6)
             ->get();
 
-        return view('books.show', compact('book', 'relatedBooks'));
+        // 貸出履歴（管理者のみ使用、新しい順）
+        $loanHistory = $book->loans()->with('user')->latest('borrowed_at')->get();
+
+        return view('books.show', compact('book', 'relatedBooks', 'loanHistory'));
     }
 
     // 書籍編集フォーム

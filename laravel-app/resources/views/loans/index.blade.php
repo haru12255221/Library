@@ -52,8 +52,10 @@
                             @foreach($loans as $loan)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-text-primary">{{ $loan->book->title }}</div>
-                                        <div class="text-sm text-text-secondary">著者: {{ $loan->book->author }}</div>
+                                        <a href="{{ route('books.show', $loan->book) }}" class="hover:text-primary transition-colors">
+                                            <div class="text-sm font-medium text-text-primary">{{ $loan->book->title }}</div>
+                                            <div class="text-sm text-text-secondary">著者: {{ $loan->book->author }}</div>
+                                        </a>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">{{ $loan->user->name }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">{{ $loan->borrowed_at->format('Y/m/d') }}</td>

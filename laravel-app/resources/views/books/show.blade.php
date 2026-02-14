@@ -163,6 +163,51 @@
             @endif
         </div>
 
+        <!-- 貸出履歴（管理者のみ） -->
+        @auth
+            @if(auth()->user()->isAdmin() && $loanHistory->count() > 0)
+                <div class="mt-8 bg-white rounded-lg shadow p-6">
+                    <h3 class="text-xl font-semibold text-[#4f4f4f] mb-4">貸出履歴</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">借主</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">貸出日</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">返却期限</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">状態</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                @foreach($loanHistory as $loan)
+                                    <tr>
+                                        <td class="px-4 py-3 text-sm text-gray-800">{{ $loan->user->name }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">{{ $loan->borrowed_at->format('Y/m/d') }}</td>
+                                        <td class="px-4 py-3 text-sm text-gray-600">{{ $loan->due_date->format('Y/m/d') }}</td>
+                                        <td class="px-4 py-3">
+                                            @if($loan->returned_at)
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                    返却済み ({{ $loan->returned_at->format('Y/m/d') }})
+                                                </span>
+                                            @elseif($loan->due_date->isPast())
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                                    期限切れ
+                                                </span>
+                                            @else
+                                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                                    貸出中
+                                                </span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @endif
+        @endauth
+
         <!-- 関連書籍（同じ著者の他の書籍） -->
         @if($relatedBooks && $relatedBooks->count() > 0)
             <div class="mt-8 bg-white rounded-lg shadow p-6">
