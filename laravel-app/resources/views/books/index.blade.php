@@ -21,7 +21,7 @@
                             x-model="searchQuery"
                             placeholder="タイトルまたは著者で検索" 
                             value="{{ request('search') }}"
-                            class="w-full px-3 py-2 pr-20 border border-border-light rounded-md focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-transparent"
+                            class="w-full px-3 py-2 pr-20 border border-border-light rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-transparent"
                             @input="handleInput"
                         >
                         <!-- クリアボタン -->
@@ -29,7 +29,7 @@
                             type="button"
                             x-show="searchQuery.length > 0"
                             @click="clearSearch"
-                            class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                            class="absolute right-2 top-1/2 transform -translate-y-1/2 text-text-light hover:text-text-secondary focus:outline-none"
                             title="検索をクリア"
                         >
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -74,7 +74,7 @@
                 
                 <!-- 検索結果の件数表示 -->
                 @if(request('search'))
-                    <div class="text-sm text-gray-600">
+                    <div class="text-sm text-text-secondary">
                         「{{ request('search') }}」の検索結果: {{ $books->total() }}件
                     </div>
                 @endif
@@ -83,7 +83,7 @@
 
         <!-- 書籍一覧 -->
         <x-ui.card padding="none">
-            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <div class="px-6 py-4 border-b border-border-light flex justify-between items-center">
                 <h2 class="text-lg font-semibold text-text-text-primary">書籍一覧</h2>
                 
 
@@ -93,10 +93,10 @@
                 @if($books->count() > 0)
                     <div class="grid gap-4">
                         @foreach($books as $book)
-                            <x-ui.card padding="sm" class="hover:shadow-md hover:border-primary-hover transition-all">
+                            <x-ui.card padding="sm" class="hover:shadow-sm hover:border-border-neutral transition-all">
                                 <!-- 詳細ページへのリンク -->
                                 <a href="{{ route('books.show', $book) }}" class="block mb-3 group">
-                                    <div class="flex items-center gap-2 text-sm text-primary-hover group-hover:text-[#3a7a94] transition-colors">
+                                    <div class="flex items-center gap-2 text-sm text-text-secondary group-hover:underline transition-colors">
                                         <span>詳細を見る</span>
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -112,7 +112,7 @@
                                                  class="w-16 h-20 object-cover rounded shadow-sm">
                                         @else
                                             <div class="w-16 h-20 bg-gray-200 rounded shadow-sm flex items-center justify-center">
-                                                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg class="w-8 h-8 text-text-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                                                 </svg>
                                             </div>
@@ -122,33 +122,33 @@
                                     <!-- 書籍情報 -->
                                     <div class="flex-1 min-w-0">
                                         <h3 class="text-lg font-semibold text-text-text-primary mb-1 truncate">{{ $book->display_title }}</h3>
-                                        <p class="text-gray-600 mb-1">著者: {{ $book->formatted_author }}</p>
+                                        <p class="text-text-secondary mb-1">著者: {{ $book->formatted_author }}</p>
                                         
                                         <!-- 拡張情報 -->
                                         @if($book->publisher)
-                                            <p class="text-sm text-gray-500 mb-1">出版社: {{ $book->formatted_publisher }}</p>
+                                            <p class="text-sm text-text-secondary mb-1">出版社: {{ $book->formatted_publisher }}</p>
                                         @endif
                                         
                                         @if($book->published_date)
-                                            <p class="text-sm text-gray-500 mb-1">出版日: {{ $book->formatted_published_date }}</p>
+                                            <p class="text-sm text-text-secondary mb-1">出版日: {{ $book->formatted_published_date }}</p>
                                         @endif
                                         
                                         @if($book->description)
-                                            <p class="text-sm text-gray-600 mb-2 line-clamp-2">{{ Str::limit($book->description, 100) }}</p>
+                                            <p class="text-sm text-text-secondary mb-2 line-clamp-2">{{ Str::limit($book->description, 100) }}</p>
                                         @endif
                                         
                                         <!-- ISBN -->
-                                        <p class="text-xs text-gray-400 mb-2">ISBN: {{ $book->isbn }}</p>
+                                        <p class="text-xs text-text-light mb-2">ISBN: {{ $book->isbn }}</p>
                                     </div>
                                 </div>
                                 
                                 <!-- 貸出状況 -->
-                                <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+                                <div class="flex items-center justify-between mt-3 pt-3 border-t border-border-light">
                                     @if($book->isAvailable())
                                         {{-- 利用可能: モバイルでもテキスト表示 --}}
-                                        <span class="font-medium flex items-center gap-2 text-success">
+                                        <span class="font-medium flex items-center gap-2 text-text-primary">
                                             <img src="{{ asset('images/library-available.png') }}" alt="利用可能" class="w-auto h-12">
-                                            利用可能
+                                            <span class="underline decoration-green-500 decoration-2 underline-offset-4">利用可能</span>
                                         </span>
                                         @auth
                                             <x-ui.confirm-modal
@@ -164,21 +164,21 @@
                                         @endauth
                                     @elseif($book->isBorrowedByMe())
                                         {{-- 貸出中（あなた）: モバイルではアイコンのみ --}}
-                                        <span class="font-medium flex items-center gap-2 text-primary">
+                                        <span class="font-medium flex items-center gap-2 text-text-primary">
                                             <img src="{{ asset('images/library-borrowed.png') }}" alt="貸出中（あなた）" class="w-auto h-12">
-                                            <span class="hidden md:inline">貸出中（あなた）</span>
+                                            <span class="hidden md:inline underline decoration-light-blue-400 decoration-2 underline-offset-4">貸出中（あなた）</span>
                                         </span>
-                                        <a href="{{ route('loans.my') }}" class="text-sm underline transition-colors text-primary hover:text-primary-hover">
+                                        <a href="{{ route('loans.my') }}" class="text-sm text-text-secondary hover:underline transition-colors">
                                             マイページで返却する
                                         </a>
                                     @else
                                         {{-- 貸出中です: モバイルではアイコンのみ --}}
-                                        <span class="font-medium flex items-center gap-2 text-danger">
+                                        <span class="font-medium flex items-center gap-2 text-text-primary">
                                             <img src="{{ asset('images/library-unavailable.png') }}" alt="貸出中" class="w-auto h-12">
-                                            <span class="hidden md:inline">貸出中です</span>
+                                            <span class="hidden md:inline underline decoration-red-400 decoration-2 underline-offset-4">貸出中です</span>
                                         </span>
                                         @if($book->currentLoan)
-                                            <span class="text-sm text-gray-500">
+                                            <span class="text-sm text-text-secondary">
                                                 返却予定: {{ $book->currentLoan->due_date->format('Y/m/d') }}
                                             </span>
                                         @endif
@@ -191,7 +191,7 @@
                     </div>
                 @else
                     <div class="text-center py-12">
-                        <p class="text-gray-500 text-lg">登録された書籍がありません</p>
+                        <p class="text-text-secondary text-lg">登録された書籍がありません</p>
                     </div>
                 @endif
 

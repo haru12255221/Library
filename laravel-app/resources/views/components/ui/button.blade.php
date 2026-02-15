@@ -9,10 +9,10 @@
 
 @php
 $variants = [
-    'primary' => 'bg-primary hover:bg-primary-hover text-white focus:ring-primary',
-    'success' => 'bg-success hover:bg-success-hover text-white focus:ring-success',
-    'danger' => 'bg-danger hover:bg-danger-hover text-white focus:ring-danger',
-    'secondary' => 'bg-gray-500 hover:bg-gray-600 text-white focus:ring-gray-500'
+    'primary' => 'bg-primary hover:bg-primary-hover text-white focus:ring-yellow-300 focus:ring-offset-black',
+    'success' => 'bg-success hover:bg-success-hover text-white focus:ring-yellow-300 focus:ring-offset-black',
+    'danger' => 'bg-danger hover:bg-danger-hover text-white focus:ring-yellow-300 focus:ring-offset-black',
+    'secondary' => 'bg-white hover:bg-gray-100 text-text-primary border border-border-neutral focus:ring-yellow-300 focus:ring-offset-black'
 ];
 
 $sizes = [

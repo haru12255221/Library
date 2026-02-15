@@ -59,24 +59,24 @@
         <!-- 書籍一覧テーブル -->
         <x-ui.card padding="none">
             <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
+                <table class="min-w-full divide-y divide-border-light">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                                 書籍情報
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                                 ISBN
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                                 出版情報
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            <th class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                                 貸出状況
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody class="bg-white divide-y divide-border-light">
                         @forelse($books as $book)
                             <tr class="hover:bg-gray-50">
                                 <!-- 書籍情報 -->
@@ -88,29 +88,29 @@
                                                  class="w-12 h-16 object-cover rounded shadow-sm mr-4">
                                         @else
                                             <div class="w-12 h-16 bg-gray-200 rounded shadow-sm mr-4 flex items-center justify-center">
-                                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg class="w-6 h-6 text-text-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                                                 </svg>
                                             </div>
                                         @endif
                                         <div>
-                                            <div class="text-sm font-medium text-gray-900">
-                                                <a href="{{ route('books.show', $book) }}" class="hover:text-primary">
+                                            <div class="text-sm font-medium text-text-primary">
+                                                <a href="{{ route('books.show', $book) }}" class="hover:underline">
                                                     {{ $book->title }}
                                                 </a>
                                             </div>
-                                            <div class="text-sm text-gray-500">{{ $book->formatted_author }}</div>
+                                            <div class="text-sm text-text-secondary">{{ $book->formatted_author }}</div>
                                         </div>
                                     </div>
                                 </td>
 
                                 <!-- ISBN -->
-                                <td class="px-6 py-4 text-sm text-gray-900 font-mono">
+                                <td class="px-6 py-4 text-sm text-text-primary font-mono">
                                     {{ $book->isbn }}
                                 </td>
 
                                 <!-- 出版情報 -->
-                                <td class="px-6 py-4 text-sm text-gray-500">
+                                <td class="px-6 py-4 text-sm text-text-secondary">
                                     @if($book->publisher)
                                         <div>{{ $book->formatted_publisher }}</div>
                                     @endif
@@ -122,15 +122,15 @@
                                 <!-- 貸出状況 -->
                                 <td class="px-6 py-4">
                                     @if($book->isAvailable())
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                        <span class="text-xs font-medium text-text-primary underline decoration-green-500 decoration-2 underline-offset-4">
                                             利用可能
                                         </span>
                                     @else
-                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                        <span class="text-xs font-medium text-text-primary underline decoration-red-400 decoration-2 underline-offset-4">
                                             貸出中
                                         </span>
                                         @if($book->currentLoan)
-                                            <div class="text-xs text-gray-500 mt-1">
+                                            <div class="text-xs text-text-secondary mt-1">
                                                 返却予定: {{ $book->currentLoan->due_date->format('Y/m/d') }}
                                             </div>
                                         @endif
@@ -139,7 +139,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="px-6 py-12 text-center text-gray-500">
+                                <td colspan="4" class="px-6 py-12 text-center text-text-secondary">
                                     @if(request('search'))
                                         「{{ request('search') }}」に該当する書籍が見つかりませんでした
                                     @else

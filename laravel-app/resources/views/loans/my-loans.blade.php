@@ -31,7 +31,7 @@
         </div>
 
         <!-- 借りている本の一覧 -->
-        <div class="bg-background rounded-lg shadow">
+        <div class="bg-background rounded-lg shadow-sm border border-border-light">
             <div class="px-6 py-4 border-b border-border-light">
                 <h3 class="text-lg font-semibold text-text-primary">
                     借りている本 ({{ $myLoans->count() }}冊)
@@ -42,7 +42,7 @@
                 @if($myLoans->count() > 0)
                     <div class="grid gap-4">
                         @foreach($myLoans as $loan)
-                            <div class="border border-border-light rounded-lg p-4 hover:shadow-md transition-all">
+                            <div class="border border-border-light rounded-lg p-4 hover:shadow-sm transition-all">
                                 <div class="flex justify-between items-start">
                                     <div class="flex-1">
                                         <h4 class="text-lg font-semibold text-text-primary mb-2">
@@ -51,11 +51,11 @@
                                         <p class="text-text-secondary mb-1">著者: {{ $loan->book->author }}</p>
                                         <p class="text-sm text-text-light mb-2">ISBN: {{ $loan->book->isbn }}</p>
                                         
-                                        <div class="flex gap-4 text-sm">
-                                            <span class="text-primary">
+                                        <div class="flex gap-4 text-sm text-text-secondary">
+                                            <span>
                                                 借りた日: {{ $loan->borrowed_at->format('Y年m月d日') }}
                                             </span>
-                                            <span class="text-danger">
+                                            <span>
                                                 返却期限: {{ $loan->due_date->format('Y年m月d日') }}
                                             </span>
                                         </div>
@@ -69,16 +69,16 @@
                                         @endphp
                                         
                                         @if($isPast)
-                                            <div class="mt-2 font-medium text-danger-hover">
-                                                ⚠️ 返却期限を過ぎています
+                                            <div class="mt-2 font-medium text-text-primary underline decoration-red-500 decoration-2 underline-offset-4">
+                                                返却期限を過ぎています
                                             </div>
                                         @elseif($daysUntilDue <= 3 && $daysUntilDue >= 0)
-                                            <div class="mt-2 font-medium text-danger">
-                                                ⚠️ 返却期限が近づいています (残り{{ floor($daysUntilDue) }}日)
+                                            <div class="mt-2 font-medium text-text-primary underline decoration-yellow-500 decoration-2 underline-offset-4">
+                                                返却期限が近づいています (残り{{ floor($daysUntilDue) }}日)
                                             </div>
 
                                         @else
-                                            <div class="mt-2 font-medium text-success">
+                                            <div class="mt-2 font-medium text-text-secondary">
                                                 返却期限まで余裕があります (残り{{ floor($daysUntilDue) }}日)
                                             </div>
                                         @endif
@@ -118,23 +118,23 @@
         <!-- 統計情報 -->
         @if($myLoans->count() > 0)
             <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-background rounded-lg shadow p-6 text-center">
-                    <div class="text-3xl font-bold text-primary">{{ $myLoans->count() }}</div>
-                    <div class="text-secondary">借用中の本</div>
+                <div class="bg-light-blue-50 rounded-lg shadow-sm border border-light-blue-200 p-6 text-center">
+                    <div class="text-3xl font-bold text-light-blue-800">{{ $myLoans->count() }}</div>
+                    <div class="text-text-secondary">借用中の本</div>
                 </div>
-                
-                <div class="bg-background rounded-lg shadow p-6 text-center">
-                    <div class="text-3xl font-bold text-success">
-                        {{ $myLoans->filter(function($loan) { 
+
+                <div class="bg-yellow-50 rounded-lg shadow-sm border border-yellow-200 p-6 text-center">
+                    <div class="text-3xl font-bold text-yellow-800">
+                        {{ $myLoans->filter(function($loan) {
                             $daysUntil = now()->diffInDays($loan->due_date, false);
                             return $daysUntil <= 3 && $daysUntil >= 0 && !$loan->due_date->isPast();
                         })->count() }}
                     </div>
                     <div class="text-text-secondary">返却期限が近い本</div>
                 </div>
-                
-                <div class="bg-background rounded-lg shadow p-6 text-center">
-                    <div class="text-3xl font-bold text-danger">
+
+                <div class="bg-red-50 rounded-lg shadow-sm border border-red-200 p-6 text-center">
+                    <div class="text-3xl font-bold text-red-800">
                         {{ $myLoans->filter(function($loan) { return $loan->due_date->isPast(); })->count() }}
                     </div>
                     <div class="text-text-secondary">期限切れの本</div>

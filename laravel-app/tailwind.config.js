@@ -1,5 +1,6 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
 import forms from '@tailwindcss/forms';
+import dadsTheme from '@digital-go-jp/tailwind-theme-plugin';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -12,26 +13,26 @@ export default {
     theme: {
         extend: {
             colors: {
-                primary: '#7ab0d4',
-                success: '#8ec293',
-                danger: '#e88a8d',
-                'primary-hover': '#5e9cc4',
-                'success-hover': '#74b37a',
-                'danger-hover': '#e06e72',
-                background: '#f8f9fa',
+                primary: '#008bf2',
+                success: '#51b883',
+                danger: '#ff5454',
+                'primary-hover': '#0066be',
+                'success-hover': '#259d63',
+                'danger-hover': '#fa0000',
+                background: '#f2f2f2',
                 'header-bg': '#ffffff',
-                'text-primary': '#4f4f4f',
-                'text-secondary': '#6b7280',
-                'text-light': '#9ca3af',
+                'text-primary': '#4d4d4d',
+                'text-secondary': '#767676',
+                'text-light': '#949494',
                 'text-white': '#ffffff',
-                'border-neutral': '#9ca3af',
-                'border-light': '#d1d5db',
+                'border-neutral': '#999999',
+                'border-light': '#cccccc',
             },
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['"Noto Sans JP"', ...defaultTheme.fontFamily.sans],
             },
         },
     },
 
-    plugins: [forms],
+    plugins: [forms, dadsTheme],
 };

@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="bg-background rounded-lg shadow m-4">
+    <div class="bg-background rounded-lg shadow-sm border border-border-light m-4">
         <div class="px-6 py-4 border-b border-border-light">
             <h3 class="text-lg font-semibold text-text-primary">
                 貸出履歴一覧 (全{{ $loans->count() }}件)
@@ -52,7 +52,7 @@
                             @foreach($loans as $loan)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <a href="{{ route('books.show', $loan->book) }}" class="hover:text-primary transition-colors">
+                                        <a href="{{ route('books.show', $loan->book) }}" class="hover:underline transition-colors">
                                             <div class="text-sm font-medium text-text-primary">{{ $loan->book->title }}</div>
                                             <div class="text-sm text-text-secondary">著者: {{ $loan->book->author }}</div>
                                         </a>

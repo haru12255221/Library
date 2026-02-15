@@ -5,16 +5,16 @@
         <!-- ヘッダー -->
         <div class="mb-8">
             <div class="flex items-center gap-4 mb-4">
-                <a href="{{ route('books.create') }}" 
-                   class="text-[#295d72] hover:text-[#3a7a94] transition-colors flex items-center gap-2">
+                <a href="{{ route('books.create') }}"
+                   class="text-text-secondary hover:text-text-primary hover:underline flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
                     書籍登録に戻る
                 </a>
-                <span class="text-gray-300">|</span>
-                <a href="{{ route('books.index') }}" 
-                   class="text-[#295d72] hover:text-[#3a7a94] transition-colors flex items-center gap-2">
+                <span class="text-border-light">|</span>
+                <a href="{{ route('books.index') }}"
+                   class="text-text-secondary hover:text-text-primary hover:underline flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2v0"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v0M8 5a2 2 0 000 4h8a2 2 0 000-4M8 5v0"></path>
@@ -22,14 +22,14 @@
                     書籍一覧
                 </a>
             </div>
-            <h1 class="text-3xl font-bold text-[#4f4f4f] mb-2">📚 ISBNスキャン</h1>
-            <p class="text-gray-600">ISBNをスキャンするか、手動で入力してください</p>
+            <h1 class="text-3xl font-bold text-text-primary mb-2">📚 ISBNスキャン</h1>
+            <p class="text-text-secondary">ISBNをスキャンするか、手動で入力してください</p>
         </div>
 
         <div class="grid md:grid-cols-2 gap-6">
             <!-- ISBNスキャン部分 -->
-            <div class="bg-white rounded-lg shadow p-6">
-                <h2 class="text-xl font-semibold text-[#4f4f4f] mb-4 flex items-center gap-2">
+            <div class="bg-white rounded-lg shadow-sm border border-border-light p-6">
+                <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2-2V9z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -39,19 +39,16 @@
                 
                 <!-- 手動入力 -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">ISBN手動入力</label>
+                    <label class="block text-sm font-medium text-text-primary mb-2">ISBN手動入力</label>
                     <div class="flex gap-2">
                         <input type="text" id="manual-isbn" 
-                               class="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#295d72] focus:border-transparent"
+                               class="flex-1 border border-border-light rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-transparent"
                                placeholder="978-4-12-345678-9"
                                oninput="handleIsbnInput(this)"
                                onkeypress="handleKeyPress(event)"
                                maxlength="17">
-                        <button onclick="fetchBookInfo()" 
-                                class="px-4 py-2 text-white rounded-md transition-colors"
-                                style="background-color: #3d7ca2;"
-                                onmouseover="this.style.backgroundColor='#2a5a7a'" 
-                                onmouseout="this.style.backgroundColor='#3d7ca2'">
+                        <button onclick="fetchBookInfo()"
+                                class="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:ring-offset-2 transition-colors">
                             検索
                         </button>
                     </div>
@@ -59,23 +56,23 @@
 
                 <!-- カメラスキャン -->
                 <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">カメラでスキャン</label>
-                    <div id="reader" class="border border-gray-300 rounded-md" style="width: 100%; max-width: 300px;"></div>
+                    <label class="block text-sm font-medium text-text-primary mb-2">カメラでスキャン</label>
+                    <div id="reader" class="border border-border-light rounded-md" style="width: 100%; max-width: 300px;"></div>
                 </div>
 
                 <!-- 結果表示 -->
-                <div id="result" class="text-sm text-gray-600"></div>
+                <div id="result" class="text-sm text-text-secondary"></div>
                 
                 <!-- ローディング -->
                 <div id="loading" class="hidden text-center py-4">
-                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-                    <p class="mt-2 text-gray-600">書籍情報を取得中...</p>
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                    <p class="mt-2 text-text-secondary">書籍情報を取得中...</p>
                 </div>
             </div>
 
             <!-- 書籍情報表示・編集部分 -->
-            <div class="bg-white rounded-lg shadow p-6">
-                <h2 class="text-xl font-semibold text-[#4f4f4f] mb-4 flex items-center gap-2">
+            <div class="bg-white rounded-lg shadow-sm border border-border-light p-6">
+                <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                     </svg>
@@ -100,46 +97,46 @@
                     <div class="mb-4 text-center">
                         <img id="book-thumbnail" src="" alt="表紙画像" 
                              class="hidden mx-auto rounded-lg shadow-md max-w-32 max-h-48">
-                        <p id="no-image" class="text-gray-500 text-sm">表紙画像なし</p>
+                        <p id="no-image" class="text-text-secondary text-sm">表紙画像なし</p>
                     </div>
 
                     <!-- 基本情報 -->
                     <div class="grid md:grid-cols-2 gap-4 mb-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">タイトル *</label>
+                            <label class="block text-sm font-medium text-text-primary mb-1">タイトル *</label>
                             <input type="text" name="title" id="title" required
-                                   class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#295d72] focus:border-transparent">
+                                   class="w-full border border-border-light rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-transparent">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">著者 *</label>
+                            <label class="block text-sm font-medium text-text-primary mb-1">著者 *</label>
                             <input type="text" name="author" id="author" required
-                                   class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#295d72] focus:border-transparent">
+                                   class="w-full border border-border-light rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-transparent">
                         </div>
                     </div>
 
                     <div class="grid md:grid-cols-2 gap-4 mb-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">ISBN *</label>
+                            <label class="block text-sm font-medium text-text-primary mb-1">ISBN *</label>
                             <input type="text" name="isbn" id="isbn" required
-                                   class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#295d72] focus:border-transparent">
+                                   class="w-full border border-border-light rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-transparent">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">出版社</label>
+                            <label class="block text-sm font-medium text-text-primary mb-1">出版社</label>
                             <input type="text" name="publisher" id="publisher"
-                                   class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#295d72] focus:border-transparent">
+                                   class="w-full border border-border-light rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-transparent">
                         </div>
                     </div>
 
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">出版日</label>
+                        <label class="block text-sm font-medium text-text-primary mb-1">出版日</label>
                         <input type="date" name="published_date" id="published_date"
-                               class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#295d72] focus:border-transparent">
+                               class="w-full border border-border-light rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-transparent">
                     </div>
 
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-1">説明</label>
+                        <label class="block text-sm font-medium text-text-primary mb-1">説明</label>
                         <textarea name="description" id="description" rows="4"
-                                  class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#295d72] focus:border-transparent"></textarea>
+                                  class="w-full border border-border-light rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-transparent"></textarea>
                     </div>
 
                     <!-- 隠しフィールド -->
@@ -147,22 +144,19 @@
 
                     <!-- 登録ボタン -->
                     <div class="flex gap-3">
-                        <button type="submit" 
-                                class="flex-1 px-4 py-3 text-white rounded-md transition-colors font-medium"
-                                style="background-color: #3d7ca2;"
-                                onmouseover="this.style.backgroundColor='#2a5a7a'" 
-                                onmouseout="this.style.backgroundColor='#3d7ca2'">
-                            📚 書籍を登録
+                        <button type="submit"
+                                class="flex-1 px-4 py-3 bg-primary text-white rounded-md hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:ring-offset-2 transition-colors font-medium">
+                            書籍を登録
                         </button>
-                        <button type="button" onclick="resetForm()" 
-                                class="px-4 py-3 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors">
+                        <button type="button" onclick="resetForm()"
+                                class="px-4 py-3 bg-white text-text-primary border border-border-neutral rounded-md hover:bg-gray-50 transition-colors">
                             リセット
                         </button>
                     </div>
                 </form>
 
                 <!-- 初期メッセージ -->
-                <div id="initial-message" class="text-center text-gray-500 py-8">
+                <div id="initial-message" class="text-center text-text-secondary py-8">
                     <p>📱 ISBNをスキャンまたは入力すると、書籍情報が表示されます</p>
                 </div>
             </div>
@@ -188,7 +182,7 @@
                 );
             } catch (error) {
                 console.error("カメラの初期化に失敗:", error);
-                document.getElementById('result').innerHTML = '<p class="text-red-500">カメラの初期化に失敗しました</p>';
+                document.getElementById('result').innerHTML = '<p class="text-text-primary underline decoration-red-400 decoration-2 underline-offset-4">カメラの初期化に失敗しました</p>';
             }
         }
 
@@ -199,7 +193,7 @@
                 return;
             }
 
-            document.getElementById('result').innerHTML = '<p class="text-green-600">✅ ISBN検出: ' + decodedText + '</p>';
+            document.getElementById('result').innerHTML = '<p class="text-text-primary">ISBN検出: ' + decodedText + '</p>';
             document.getElementById('manual-isbn').value = decodedText;
             
             // 書籍情報を取得

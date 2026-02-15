@@ -15,19 +15,19 @@ $paddingClasses = [
 $shadowClasses = [
     'none' => '',
     'sm' => 'shadow-sm',
-    'default' => 'shadow-md',
-    'lg' => 'shadow-lg',
-    'xl' => 'shadow-xl'
+    'default' => 'shadow-sm',
+    'lg' => 'shadow-md',
+    'xl' => 'shadow-lg'
 ];
 
 $baseClasses = 'bg-white rounded-lg';
-$borderClasses = $border ? 'border border-gray-200' : '';
+$borderClasses = $border ? 'border border-border-light' : '';
 $classes = $baseClasses . ' ' . $shadowClasses[$shadow] . ' ' . $borderClasses . ' ' . $paddingClasses[$padding];
 @endphp
 
 <div {{ $attributes->merge(['class' => $classes]) }}>
     @isset($header)
-        <div class="border-b border-gray-200 pb-4 mb-4">
+        <div class="border-b border-border-light pb-4 mb-4">
             {{ $header }}
         </div>
     @endisset
@@ -37,7 +37,7 @@ $classes = $baseClasses . ' ' . $shadowClasses[$shadow] . ' ' . $borderClasses .
     </div>
     
     @isset($footer)
-        <div class="border-t border-gray-200 pt-4 mt-4">
+        <div class="border-t border-border-light pt-4 mt-4">
             {{ $footer }}
         </div>
     @endisset

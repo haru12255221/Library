@@ -9,7 +9,7 @@ $baseClasses = 'w-full px-3 py-2 border rounded-md shadow-sm transition-colors f
 
 $stateClasses = $hasError 
     ? 'border-danger focus:border-danger focus:ring-danger' 
-    : 'border-border-light focus:border-primary focus:ring-primary';
+    : 'border-border-light focus:border-primary focus:ring-yellow-300';
 
 $classes = $baseClasses . ' ' . $stateClasses;
 @endphp

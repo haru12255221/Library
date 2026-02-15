@@ -8,8 +8,9 @@
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -29,12 +30,12 @@
                     <div class="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-text-secondary">
                         <p>&copy; {{ date('Y') }} 学校図書管理システム「本見れたり、借りれたり」</p>
                         <div class="flex items-center gap-4">
-                            <a href="{{ route('books.index') }}" class="hover:text-primary transition-colors">書籍一覧</a>
+                            <a href="{{ route('books.index') }}" class="hover:text-text-primary hover:underline transition-colors">書籍一覧</a>
                             @auth
-                                <a href="{{ route('loans.my') }}" class="hover:text-primary transition-colors">マイページ</a>
+                                <a href="{{ route('loans.my') }}" class="hover:text-text-primary hover:underline transition-colors">マイページ</a>
                             @endauth
-                            <a href="{{ route('legal.terms') }}" class="hover:text-primary transition-colors">利用規約</a>
-                            <a href="{{ route('legal.privacy') }}" class="hover:text-primary transition-colors">プライバシーポリシー</a>
+                            <a href="{{ route('legal.terms') }}" class="hover:text-text-primary hover:underline transition-colors">利用規約</a>
+                            <a href="{{ route('legal.privacy') }}" class="hover:text-text-primary hover:underline transition-colors">プライバシーポリシー</a>
                         </div>
                     </div>
                 </div>

@@ -4,7 +4,7 @@
         <div class="mb-8">
             <div class="flex items-center gap-4 mb-4">
                 <a href="{{ route('books.show', $book) }}"
-                   class="text-primary hover:text-primary-hover transition-colors flex items-center gap-2">
+                   class="text-text-secondary hover:underline transition-colors flex items-center gap-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
@@ -15,7 +15,7 @@
         </div>
 
         <!-- 書籍編集フォーム -->
-        <div class="bg-background rounded-lg shadow p-6">
+        <div class="bg-background rounded-lg shadow-sm border border-border-light p-6">
             <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
@@ -39,7 +39,7 @@
                             name="title"
                             required
                             value="{{ old('title', $book->title) }}"
-                            class="w-full px-3 py-2 border border-border-light rounded-md focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-transparent"
+                            class="w-full px-3 py-2 border border-border-light rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-transparent"
                         >
                         <x-forms.validation-error :messages="$errors->get('title')" field="title" />
                     </div>
@@ -54,7 +54,7 @@
                             name="author"
                             required
                             value="{{ old('author', $book->author) }}"
-                            class="w-full px-3 py-2 border border-border-light rounded-md focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-transparent"
+                            class="w-full px-3 py-2 border border-border-light rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-transparent"
                         >
                         <x-forms.validation-error :messages="$errors->get('author')" field="author" />
                     </div>
@@ -69,7 +69,7 @@
                             name="isbn"
                             required
                             value="{{ old('isbn', $book->isbn) }}"
-                            class="w-full px-3 py-2 border border-border-light rounded-md focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-transparent"
+                            class="w-full px-3 py-2 border border-border-light rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-transparent"
                         >
                         <x-forms.validation-error :messages="$errors->get('isbn')" field="isbn" />
                     </div>
@@ -87,7 +87,7 @@
                                 id="publisher"
                                 name="publisher"
                                 value="{{ old('publisher', $book->publisher) }}"
-                                class="w-full px-3 py-2 border border-border-light rounded-md focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-transparent"
+                                class="w-full px-3 py-2 border border-border-light rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-transparent"
                             >
                             <x-forms.validation-error :messages="$errors->get('publisher')" field="publisher" />
                         </div>
@@ -99,7 +99,7 @@
                                 id="published_date"
                                 name="published_date"
                                 value="{{ old('published_date', $book->published_date?->format('Y-m-d')) }}"
-                                class="w-full px-3 py-2 border border-border-light rounded-md focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-transparent"
+                                class="w-full px-3 py-2 border border-border-light rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-transparent"
                             >
                             <x-forms.validation-error :messages="$errors->get('published_date')" field="published_date" />
                         </div>
@@ -111,7 +111,7 @@
                                 id="thumbnail_url"
                                 name="thumbnail_url"
                                 value="{{ old('thumbnail_url', $book->thumbnail_url) }}"
-                                class="w-full px-3 py-2 border border-border-light rounded-md focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-transparent"
+                                class="w-full px-3 py-2 border border-border-light rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-transparent"
                             >
                             <x-forms.validation-error :messages="$errors->get('thumbnail_url')" field="thumbnail_url" />
                         </div>
@@ -122,7 +122,7 @@
                                 id="description"
                                 name="description"
                                 rows="4"
-                                class="w-full px-3 py-2 border border-border-light rounded-md focus:outline-none focus:ring-2 focus:ring-primary-hover focus:border-transparent"
+                                class="w-full px-3 py-2 border border-border-light rounded-md focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:border-transparent"
                             >{{ old('description', $book->description) }}</textarea>
                             <x-forms.validation-error :messages="$errors->get('description')" field="description" />
                         </div>

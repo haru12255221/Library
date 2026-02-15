@@ -10,26 +10,26 @@
 
             <h2 class="text-center text-2xl font-bold text-text-primary mb-6">新規登録</h2>
 
-            <form method="POST" action="{{ route('register') }}">
+            <form method="POST" action="{{ route('register') }}" novalidate>
                 @csrf
 
                 <!-- Name -->
                 <div>
-                    <label for="name" class="block font-medium text-sm text-gray-700">名前</label>
+                    <label for="name" class="block font-medium text-sm text-text-primary">名前</label>
                     <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
                     <x-input-error :messages="$errors->get('name')" class="mt-2" />
                 </div>
 
                 <!-- Email Address -->
                 <div class="mt-4">
-                    <label for="email" class="block font-medium text-sm text-gray-700">メールアドレス</label>
+                    <label for="email" class="block font-medium text-sm text-text-primary">メールアドレス</label>
                     <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
 
                 <!-- Password -->
                 <div class="mt-4">
-                    <label for="password" class="block font-medium text-sm text-gray-700">パスワード</label>
+                    <label for="password" class="block font-medium text-sm text-text-primary">パスワード</label>
                     <x-text-input id="password" class="block mt-1 w-full"
                                     type="password"
                                     name="password"
@@ -39,7 +39,7 @@
 
                 <!-- Confirm Password -->
                 <div class="mt-4">
-                    <label for="password_confirmation" class="block font-medium text-sm text-gray-700">パスワード（確認用）</label>
+                    <label for="password_confirmation" class="block font-medium text-sm text-text-primary">パスワード（確認用）</label>
                     <x-text-input id="password_confirmation" class="block mt-1 w-full"
                                     type="password"
                                     name="password_confirmation" required autocomplete="new-password" />
@@ -47,17 +47,17 @@
                 </div>
 
                 <div class="mt-4">
-                    <p class="text-xs text-gray-500">
-                        登録することで、<a href="{{ route('legal.terms') }}" target="_blank" class="underline text-primary hover:text-primary-hover">利用規約</a>および<a href="{{ route('legal.privacy') }}" target="_blank" class="underline text-primary hover:text-primary-hover">プライバシーポリシー</a>に同意したものとみなされます。
+                    <p class="text-xs text-text-secondary">
+                        登録することで、<a href="{{ route('legal.terms') }}" target="_blank" class="underline text-text-secondary hover:text-text-primary">利用規約</a>および<a href="{{ route('legal.privacy') }}" target="_blank" class="underline text-text-secondary hover:text-text-primary">プライバシーポリシー</a>に同意したものとみなされます。
                     </p>
                 </div>
 
                 <div class="flex items-center justify-end mt-4">
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary" href="{{ route('login') }}">
+                    <a class="underline text-sm text-text-secondary hover:text-text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300" href="{{ route('login') }}">
                         すでに登録済みの方はこちら
                     </a>
 
-                    <button type="submit" class="ms-4 inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-primary-hover focus:bg-primary-hover active:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition ease-in-out duration-150">
+                    <button type="submit" class="ms-4 inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-primary-hover focus:bg-primary-hover active:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:ring-offset-2 transition ease-in-out duration-150">
                         登録する
                     </button>
                 </div>

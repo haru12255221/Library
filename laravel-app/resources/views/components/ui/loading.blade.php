@@ -16,7 +16,7 @@ $sizes = [
 $colors = [
     'primary' => 'text-primary',
     'white' => 'text-white',
-    'gray' => 'text-gray-500'
+    'gray' => 'text-text-secondary'
 ];
 
 $sizeClass = $sizes[$size];
