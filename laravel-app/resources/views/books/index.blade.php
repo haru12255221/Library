@@ -11,7 +11,7 @@
 
         <!-- 検索フォーム -->
         <x-ui.card class="mb-8" x-data="searchForm()" x-init="window.addEventListener('pageshow', () => isSearching = false)">
-            <form action="{{ route('books.index') }}" method="GET" class="space-y-4">
+            <form action="{{ route('books.index') }}" method="GET" class="space-y-4" @submit="isSearching = true">
                 <div>
                     <label class="block text-sm font-medium text-text-text-primary mb-2">検索キーワード</label>
                     <div class="relative">
@@ -46,7 +46,6 @@
                         size="lg"
                         class="w-full sm:w-auto min-h-[44px]"
                         x-bind:disabled="isSearching"
-                        @click="isSearching = true"
                     >
                         <span x-show="!isSearching" class="flex items-center justify-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
