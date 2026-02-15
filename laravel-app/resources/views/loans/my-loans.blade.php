@@ -2,25 +2,25 @@
     <div class="max-w-7xl mx-auto px-4">
         <!-- 成功・エラーメッセージ -->
         @if(session('success'))
-            <div class="bg-green-100 border border-green-400 text-success px-4 py-3 rounded mb-6">
+            <x-ui.alert type="success" dismissible class="mb-6">
                 {{ session('success') }}
-            </div>
+            </x-ui.alert>
         @endif
 
         @if(session('error'))
-            <div class="bg-red-100 border border-red-400 text-danger px-4 py-3 rounded mb-6">
+            <x-ui.alert type="danger" dismissible class="mb-6">
                 {{ session('error') }}
-            </div>
+            </x-ui.alert>
         @endif
 
         <!-- ページタイトル -->
-        <div class="mb-8 flex items-center justify-between">
+        <div class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-                <h2 class="text-3xl font-bold text-text-primary">マイページ</h2>
+                <h2 class="text-2xl sm:text-3xl font-bold text-text-primary">マイページ</h2>
                 <p class="text-text-secondary mt-2">借りている本の一覧と返却ができます</p>
             </div>
-            <div class="flex items-center gap-4 mb-4">
-                <a href="{{ route('profile.edit') }}" 
+            <div class="flex items-center">
+                <a href="{{ route('profile.edit') }}"
                     class="text-text-primary hover:text-text-light transition-colors flex items-center gap-2">
                     <svg class="w-5 h-5" transform="scale(-1, 1)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
@@ -32,26 +32,26 @@
 
         <!-- 借りている本の一覧 -->
         <div class="bg-background rounded-lg shadow-sm border border-border-light">
-            <div class="px-6 py-4 border-b border-border-light">
+            <div class="px-4 sm:px-6 py-4 border-b border-border-light">
                 <h3 class="text-lg font-semibold text-text-primary">
                     借りている本 ({{ $myLoans->count() }}冊)
                 </h3>
             </div>
             
-            <div class="p-6">
+            <div class="p-3 sm:p-6">
                 @if($myLoans->count() > 0)
                     <div class="grid gap-4">
                         @foreach($myLoans as $loan)
                             <div class="border border-border-light rounded-lg p-4 hover:shadow-sm transition-all">
-                                <div class="flex justify-between items-start">
-                                    <div class="flex-1">
-                                        <h4 class="text-lg font-semibold text-text-primary mb-2">
+                                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
+                                    <div class="flex-1 min-w-0">
+                                        <h4 class="text-base sm:text-lg font-semibold text-text-primary mb-2">
                                             {{ $loan->book->title }}
                                         </h4>
                                         <p class="text-text-secondary mb-1">著者: {{ $loan->book->author }}</p>
                                         <p class="text-sm text-text-light mb-2">ISBN: {{ $loan->book->isbn }}</p>
-                                        
-                                        <div class="flex gap-4 text-sm text-text-secondary">
+
+                                        <div class="flex flex-col sm:flex-row sm:gap-4 gap-1 text-sm text-text-secondary">
                                             <span>
                                                 借りた日: {{ $loan->borrowed_at->format('Y年m月d日') }}
                                             </span>
@@ -85,7 +85,7 @@
                                     </div>
                                     
                                     <!-- 返却ボタン -->
-                                    <div class="ml-4">
+                                    <div class="sm:ml-4">
                                         <x-ui.confirm-modal
                                             title="返却確認"
                                             message="「{{ $loan->book->title }}」を返却しますか？"
@@ -117,27 +117,29 @@
 
         <!-- 統計情報 -->
         @if($myLoans->count() > 0)
-            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-light-blue-50 rounded-lg shadow-sm border border-light-blue-200 p-6 text-center">
-                    <div class="text-3xl font-bold text-light-blue-800">{{ $myLoans->count() }}</div>
-                    <div class="text-text-secondary">借用中の本</div>
+            <div class="mt-8 grid grid-cols-3 gap-3 sm:gap-6">
+                <div class="bg-white rounded-lg shadow-sm border border-border-light p-3 sm:p-6 text-center">
+                    <div class="text-2xl sm:text-3xl font-bold text-text-primary">{{ $myLoans->count() }}</div>
+                    <div class="text-xs sm:text-sm text-text-secondary">借用中の本</div>
                 </div>
 
-                <div class="bg-yellow-50 rounded-lg shadow-sm border border-yellow-200 p-6 text-center">
-                    <div class="text-3xl font-bold text-yellow-800">
-                        {{ $myLoans->filter(function($loan) {
+                <div class="bg-white rounded-lg shadow-sm border border-border-light p-3 sm:p-6 text-center">
+                    @php
+                        $nearDueCount = $myLoans->filter(function($loan) {
                             $daysUntil = now()->diffInDays($loan->due_date, false);
                             return $daysUntil <= 3 && $daysUntil >= 0 && !$loan->due_date->isPast();
-                        })->count() }}
-                    </div>
-                    <div class="text-text-secondary">返却期限が近い本</div>
+                        })->count();
+                    @endphp
+                    <div class="text-2xl sm:text-3xl font-bold text-text-primary {{ $nearDueCount > 0 ? 'underline decoration-yellow-500 decoration-2 underline-offset-4' : '' }}">{{ $nearDueCount }}</div>
+                    <div class="text-xs sm:text-sm text-text-secondary">返却期限が近い本</div>
                 </div>
 
-                <div class="bg-red-50 rounded-lg shadow-sm border border-red-200 p-6 text-center">
-                    <div class="text-3xl font-bold text-red-800">
-                        {{ $myLoans->filter(function($loan) { return $loan->due_date->isPast(); })->count() }}
-                    </div>
-                    <div class="text-text-secondary">期限切れの本</div>
+                <div class="bg-white rounded-lg shadow-sm border border-border-light p-3 sm:p-6 text-center">
+                    @php
+                        $overdueCount = $myLoans->filter(function($loan) { return $loan->due_date->isPast(); })->count();
+                    @endphp
+                    <div class="text-2xl sm:text-3xl font-bold text-text-primary {{ $overdueCount > 0 ? 'underline decoration-red-400 decoration-2 underline-offset-4' : '' }}">{{ $overdueCount }}</div>
+                    <div class="text-xs sm:text-sm text-text-secondary">期限切れの本</div>
                 </div>
             </div>
         @endif

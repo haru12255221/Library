@@ -1,19 +1,19 @@
 <x-app-layout>
-    <div class="bg-background rounded-lg shadow-sm border border-border-light m-4">
-        <div class="px-6 py-4 border-b border-border-light">
+    <div class="bg-background rounded-lg shadow-sm border border-border-light mx-4 my-6">
+        <div class="px-4 sm:px-6 py-4 border-b border-border-light">
             <h3 class="text-lg font-semibold text-text-primary">
                 貸出履歴一覧 (全{{ $loans->count() }}件)
             </h3>
         </div>
-        <div class="p-6 m-4">
+        <div class="p-3 sm:p-6">
             @if($loans->count() > 0)
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-border-light">
                         <thead class="bg-background">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">書籍情報</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">借主</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">書籍情報</th>
+                                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider hidden sm:table-cell">借主</th>
+                                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider hidden md:table-cell">
                                     @php
                                         $linkDirection = ($sort === 'borrowed_at' && $direction === 'asc') ? 'desc' : 'asc';
                                     @endphp
@@ -24,7 +24,7 @@
                                         @endif
                                     </a>
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider hidden md:table-cell">
                                     @php
                                         $linkDirection = ($sort === 'due_date' && $direction === 'asc') ? 'desc' : 'asc';
                                     @endphp
@@ -35,7 +35,7 @@
                                         @endif
                                     </a>
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                                     @php
                                         $linkDirection = ($sort === 'status' && $direction === 'asc') ? 'desc' : 'asc';
                                     @endphp
@@ -51,30 +51,26 @@
                         <tbody class="bg-background divide-y divide-border-light">
                             @foreach($loans as $loan)
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
+                                    <td class="px-3 sm:px-6 py-3 sm:py-4">
                                         <a href="{{ route('books.show', $loan->book) }}" class="hover:underline transition-colors">
                                             <div class="text-sm font-medium text-text-primary">{{ $loan->book->title }}</div>
-                                            <div class="text-sm text-text-secondary">著者: {{ $loan->book->author }}</div>
+                                            <div class="text-xs sm:text-sm text-text-secondary">{{ $loan->book->author }}</div>
                                         </a>
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">{{ $loan->user->name }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">{{ $loan->borrowed_at->format('Y/m/d') }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">{{ $loan->due_date->format('Y/m/d') }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        {{-- ▼ここがポイント！▼ --}}
+                                    <td class="px-3 sm:px-6 py-3 sm:py-4 text-sm text-text-secondary hidden sm:table-cell">{{ $loan->user->name }}</td>
+                                    <td class="px-3 sm:px-6 py-3 sm:py-4 text-sm text-text-secondary hidden md:table-cell">{{ $loan->borrowed_at->format('Y/m/d') }}</td>
+                                    <td class="px-3 sm:px-6 py-3 sm:py-4 text-sm text-text-secondary hidden md:table-cell">{{ $loan->due_date->format('Y/m/d') }}</td>
+                                    <td class="px-3 sm:px-6 py-3 sm:py-4">
                                         @if ($loan->returned_at)
-                                            {{-- 返却日が記録されていれば「返却済み」と表示 --}}
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                返却済み ({{ $loan->returned_at->format('Y/m/d') }})
+                                            <span class="text-xs font-medium text-text-primary underline decoration-green-500 decoration-2 underline-offset-4">
+                                                返却済み
                                             </span>
                                         @elseif ($loan->due_date->isPast())
-                                            {{-- 返却されておらず、期限が過ぎていれば「期限切れ」と表示 --}}
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                            <span class="text-xs font-medium text-text-primary underline decoration-red-400 decoration-2 underline-offset-4">
                                                 期限切れ
                                             </span>
                                         @else
-                                            {{-- それ以外（返却されておらず、期限内）は「貸出中」--}}
-                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                            <span class="text-xs font-medium text-text-primary underline decoration-yellow-500 decoration-2 underline-offset-4">
                                                 貸出中
                                             </span>
                                         @endif

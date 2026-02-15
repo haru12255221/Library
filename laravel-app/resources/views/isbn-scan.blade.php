@@ -22,13 +22,13 @@
                     書籍一覧
                 </a>
             </div>
-            <h1 class="text-3xl font-bold text-text-primary mb-2">📚 ISBNスキャン</h1>
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-text-primary mb-2">ISBNスキャン</h1>
             <p class="text-text-secondary">ISBNをスキャンするか、手動で入力してください</p>
         </div>
 
         <div class="grid md:grid-cols-2 gap-6">
             <!-- ISBNスキャン部分 -->
-            <div class="bg-white rounded-lg shadow-sm border border-border-light p-6">
+            <div class="bg-white rounded-lg shadow-sm border border-border-light p-4 sm:p-6">
                 <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2-2V9z"></path>
@@ -71,7 +71,7 @@
             </div>
 
             <!-- 書籍情報表示・編集部分 -->
-            <div class="bg-white rounded-lg shadow-sm border border-border-light p-6">
+            <div class="bg-white rounded-lg shadow-sm border border-border-light p-4 sm:p-6">
                 <h2 class="text-xl font-semibold text-text-primary mb-4 flex items-center gap-2">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
@@ -80,12 +80,12 @@
                 </h2>
                 
                 <!-- エラーメッセージ -->
-                <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <div id="error-message" class="hidden border border-red-400 text-text-primary px-4 py-3 rounded mb-4">
                     <p id="error-text"></p>
                 </div>
 
                 <!-- 成功メッセージ -->
-                <div id="success-message" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                <div id="success-message" class="hidden border border-green-500 text-text-primary px-4 py-3 rounded mb-4">
                     <p id="success-text"></p>
                 </div>
 

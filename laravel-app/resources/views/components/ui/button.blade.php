@@ -16,7 +16,7 @@ $variants = [
 ];
 
 $sizes = [
-    'sm' => 'px-3 py-2 text-sm min-h-[40px]',
+    'sm' => 'px-3 py-2 text-sm min-h-[44px]',
     'md' => 'px-4 py-2.5 text-sm min-h-[44px]',
     'lg' => 'px-6 py-3 text-base min-h-[48px]'
 ];

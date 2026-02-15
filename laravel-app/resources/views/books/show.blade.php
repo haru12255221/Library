@@ -27,7 +27,7 @@
         <div class="bg-white rounded-lg shadow-sm border border-border-light overflow-hidden">
             <div class="md:flex">
                 <!-- 表紙画像 -->
-                <div class="md:w-1/3 bg-gray-50 flex items-center justify-center p-8">
+                <div class="md:w-1/3 bg-gray-50 flex items-center justify-center p-4 md:p-8">
                     @if($book->thumbnail_url)
                         <img src="{{ $book->thumbnail_url }}" 
                              alt="{{ $book->title }}の表紙" 
@@ -45,33 +45,33 @@
                 </div>
 
                 <!-- 書籍情報 -->
-                <div class="md:w-2/3 p-8">
+                <div class="md:w-2/3 p-4 md:p-8">
                     <!-- タイトル -->
-                    <h1 class="text-3xl font-bold text-text-primary mb-4">{{ $book->display_title }}</h1>
+                    <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-text-primary mb-4">{{ $book->display_title }}</h1>
                     
                     <!-- 基本情報 -->
                     <div class="space-y-3 mb-6">
                         <div class="flex items-start gap-3">
-                            <span class="text-sm font-medium text-text-secondary w-20 flex-shrink-0">著者</span>
+                            <span class="text-sm font-medium text-text-secondary w-16 sm:w-20 flex-shrink-0">著者</span>
                             <span class="text-text-primary">{{ $book->formatted_author }}</span>
                         </div>
                         
                         @if($book->publisher)
                             <div class="flex items-start gap-3">
-                                <span class="text-sm font-medium text-text-secondary w-20 flex-shrink-0">出版社</span>
+                                <span class="text-sm font-medium text-text-secondary w-16 sm:w-20 flex-shrink-0">出版社</span>
                                 <span class="text-text-primary">{{ $book->formatted_publisher }}</span>
                             </div>
                         @endif
                         
                         @if($book->published_date)
                             <div class="flex items-start gap-3">
-                                <span class="text-sm font-medium text-text-secondary w-20 flex-shrink-0">出版日</span>
+                                <span class="text-sm font-medium text-text-secondary w-16 sm:w-20 flex-shrink-0">出版日</span>
                                 <span class="text-text-primary">{{ $book->formatted_published_date }}</span>
                             </div>
                         @endif
                         
                         <div class="flex items-start gap-3">
-                            <span class="text-sm font-medium text-text-secondary w-20 flex-shrink-0">ISBN</span>
+                            <span class="text-sm font-medium text-text-secondary w-16 sm:w-20 flex-shrink-0">ISBN</span>
                             <span class="text-text-primary font-mono">{{ $book->isbn }}</span>
                         </div>
                     </div>
@@ -154,7 +154,7 @@
 
             <!-- 説明文 -->
             @if($book->description)
-                <div class="border-t border-border-light p-8">
+                <div class="border-t border-border-light p-4 md:p-8">
                     <h3 class="text-xl font-semibold text-text-primary mb-4">内容紹介</h3>
                     <div class="prose max-w-none text-text-primary leading-relaxed">
                         {{ $book->description }}
@@ -166,7 +166,7 @@
         <!-- 貸出履歴（管理者のみ） -->
         @auth
             @if(auth()->user()->isAdmin() && $loanHistory->count() > 0)
-                <div class="mt-8 bg-white rounded-lg shadow-sm border border-border-light p-6">
+                <div class="mt-8 bg-white rounded-lg shadow-sm border border-border-light p-4 sm:p-6">
                     <h3 class="text-xl font-semibold text-text-primary mb-4">貸出履歴</h3>
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-border-light">
@@ -210,7 +210,7 @@
 
         <!-- 関連書籍（同じ著者の他の書籍） -->
         @if($relatedBooks && $relatedBooks->count() > 0)
-            <div class="mt-8 bg-white rounded-lg shadow-sm border border-border-light p-6">
+            <div class="mt-8 bg-white rounded-lg shadow-sm border border-border-light p-4 sm:p-6">
                 <h3 class="text-xl font-semibold text-text-primary mb-4">同じ著者の他の書籍</h3>
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                     @foreach($relatedBooks as $relatedBook)

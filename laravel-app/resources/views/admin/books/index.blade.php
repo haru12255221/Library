@@ -4,7 +4,7 @@
         <div class="mb-8">
             <div class="flex justify-between items-center">
                 <div>
-                    <h1 class="text-3xl font-bold text-text-primary">書籍管理</h1>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-text-primary">書籍管理</h1>
                     <p class="text-text-secondary mt-2">管理者専用：書籍の登録・編集・削除</p>
                 </div>
                 
@@ -33,7 +33,7 @@
 
         <!-- 検索フォーム -->
         <x-ui.card class="mb-6">
-            <form action="{{ route('admin.books.index') }}" method="GET" class="flex gap-4">
+            <form action="{{ route('admin.books.index') }}" method="GET" class="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <div class="flex-1">
                     <x-text-input 
                         type="text" 
@@ -62,16 +62,16 @@
                 <table class="min-w-full divide-y divide-border-light">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                            <th class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                                 書籍情報
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                            <th class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider hidden md:table-cell">
                                 ISBN
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                            <th class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider hidden lg:table-cell">
                                 出版情報
                             </th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
+                            <th class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">
                                 貸出状況
                             </th>
                         </tr>
@@ -80,37 +80,37 @@
                         @forelse($books as $book)
                             <tr class="hover:bg-gray-50">
                                 <!-- 書籍情報 -->
-                                <td class="px-6 py-4">
+                                <td class="px-3 sm:px-6 py-3 sm:py-4">
                                     <div class="flex items-center">
                                         @if($book->thumbnail_url)
-                                            <img src="{{ $book->thumbnail_url }}" 
-                                                 alt="{{ $book->title }}の表紙" 
-                                                 class="w-12 h-16 object-cover rounded shadow-sm mr-4">
+                                            <img src="{{ $book->thumbnail_url }}"
+                                                 alt="{{ $book->title }}の表紙"
+                                                 class="w-10 h-14 sm:w-12 sm:h-16 object-cover rounded shadow-sm mr-3 sm:mr-4">
                                         @else
-                                            <div class="w-12 h-16 bg-gray-200 rounded shadow-sm mr-4 flex items-center justify-center">
-                                                <svg class="w-6 h-6 text-text-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <div class="w-10 h-14 sm:w-12 sm:h-16 bg-gray-200 rounded shadow-sm mr-3 sm:mr-4 flex items-center justify-center">
+                                                <svg class="w-5 h-5 sm:w-6 sm:h-6 text-text-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                                                 </svg>
                                             </div>
                                         @endif
-                                        <div>
-                                            <div class="text-sm font-medium text-text-primary">
+                                        <div class="min-w-0">
+                                            <div class="text-sm font-medium text-text-primary truncate">
                                                 <a href="{{ route('books.show', $book) }}" class="hover:underline">
                                                     {{ $book->title }}
                                                 </a>
                                             </div>
-                                            <div class="text-sm text-text-secondary">{{ $book->formatted_author }}</div>
+                                            <div class="text-sm text-text-secondary truncate">{{ $book->formatted_author }}</div>
                                         </div>
                                     </div>
                                 </td>
 
                                 <!-- ISBN -->
-                                <td class="px-6 py-4 text-sm text-text-primary font-mono">
+                                <td class="px-3 sm:px-6 py-3 sm:py-4 text-sm text-text-primary font-mono hidden md:table-cell">
                                     {{ $book->isbn }}
                                 </td>
 
                                 <!-- 出版情報 -->
-                                <td class="px-6 py-4 text-sm text-text-secondary">
+                                <td class="px-3 sm:px-6 py-3 sm:py-4 text-sm text-text-secondary hidden lg:table-cell">
                                     @if($book->publisher)
                                         <div>{{ $book->formatted_publisher }}</div>
                                     @endif
@@ -120,7 +120,7 @@
                                 </td>
 
                                 <!-- 貸出状況 -->
-                                <td class="px-6 py-4">
+                                <td class="px-3 sm:px-6 py-3 sm:py-4">
                                     @if($book->isAvailable())
                                         <span class="text-xs font-medium text-text-primary underline decoration-green-500 decoration-2 underline-offset-4">
                                             利用可能

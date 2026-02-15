@@ -57,3 +57,34 @@
 
 ## 9. Git操作のルール
 * **「ステージングして」と言われた場合**: そのチャット内で自分が変更・作成したファイルのみを `git add` する。未関係のファイルを含めない。
+
+## 10. ブランチ戦略
+
+| ブランチ | 用途 |
+|---|---|
+| `main` | 本番（Renderにデプロイ） |
+| `dev` | 開発統合ブランチ |
+| `feature/xxx` | 新機能の開発 |
+| `fix/xxx` | バグ修正 |
+| `hotfix/xxx` | 本番の緊急修正 |
+
+### 開発フロー
+1. `dev` から `feature/xxx` または `fix/xxx` を切る
+2. 作業・コミット
+3. `dev` にマージ
+4. 確認OK → `main` にマージ → 本番デプロイ
+
+### コミットメッセージ規約（Conventional Commits）
+```
+feat: 新機能の説明
+fix: バグ修正の説明
+docs: ドキュメント変更
+style: UI/デザイン変更
+refactor: リファクタリング
+```
+
+## 11. 開発環境
+* ローカル開発: Docker MySQL（`docker compose up`）
+* 本番: Neon PostgreSQL（Render環境変数で設定）
+* `.env` はローカルMySQL接続用に設定する（本番の認証情報を書かない）
+* アプリURL: `http://localhost:8001`
