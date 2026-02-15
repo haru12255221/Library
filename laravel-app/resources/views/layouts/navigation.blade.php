@@ -2,7 +2,7 @@
 <header class="bg-header-bg border-b border-border-light w-full" x-data="{ open: false }">
     <div class="max-w-7xl mx-auto px-4 py-4 sm:py-6">
         <div class="flex justify-between items-center gap-2">
-            <h1 class="text-2xl font-bold flex items-center text-text-primary flex-shrink min-w-0">
+            <h1 class="text-2xl font-extrabold flex items-center text-text-primary flex-shrink min-w-0">
                 <span class="flex-shrink-0"><a href="{{ route('books.index') }}"><img src="{{ asset('images/Vector.png') }}" alt="本" class="pr-2 w-auto h-14 sm:h-20"></a></span>
                 <span class="text-text-primary truncate hidden lg:inline">「本見れたり、借りれたり」</span>
             </h1>
@@ -68,24 +68,24 @@
     <!-- モバイルメニュー -->
     <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="md:hidden bg-white border-t border-border-light py-2 w-full">
         <div class="px-4 pt-2 pb-3 space-y-1 w-full">
-            <a href="{{ route('books.index') }}" @click="open = false" class="block px-3 py-3 rounded-md text-base font-medium text-text-primary hover:bg-background min-h-[44px] {{ request()->routeIs('books.index', 'home') ? 'font-semibold border-l-2 border-text-primary' : '' }}">書籍一覧</a>
+            <a href="{{ route('books.index') }}" @click="open = false" class="block px-3 py-3 rounded-md text-base text-text-primary hover:bg-background min-h-[44px] {{ request()->routeIs('books.index', 'home') ? 'font-semibold underline underline-offset-4 decoration-2 decoration-text-primary' : 'font-medium' }}">書籍一覧</a>
 
             @auth
                 @if(auth()->user()->isAdmin())
-                    <a href="{{ route('admin.dashboard') }}" @click="open = false" class="block px-3 py-3 rounded-md text-base font-medium text-text-primary hover:bg-background min-h-[44px] {{ request()->routeIs('admin.dashboard') ? 'font-semibold border-l-2 border-text-primary' : '' }}">ダッシュボード</a>
-                    <a href="{{ route('books.create') }}" @click="open = false" class="block px-3 py-3 rounded-md text-base font-medium text-text-primary hover:bg-background min-h-[44px] {{ request()->routeIs('books.create') ? 'font-semibold border-l-2 border-text-primary' : '' }}">書籍登録</a>
-                    <a href="{{ route('loans.index') }}" @click="open = false" class="block px-3 py-3 rounded-md text-base font-medium text-text-primary hover:bg-background min-h-[44px] {{ request()->routeIs('loans.index') ? 'font-semibold border-l-2 border-text-primary' : '' }}">貸出履歴</a>
-                    <a href="{{ route('loans.overdue') }}" @click="open = false" class="block px-3 py-3 rounded-md text-base font-medium text-text-primary hover:bg-background min-h-[44px] {{ request()->routeIs('loans.overdue') ? 'font-semibold border-l-2 border-text-primary' : '' }}">延滞一覧</a>
-                    <a href="{{ route('admin.users.index') }}" @click="open = false" class="block px-3 py-3 rounded-md text-base font-medium text-text-primary hover:bg-background min-h-[44px] {{ request()->routeIs('admin.users.index') ? 'font-semibold border-l-2 border-text-primary' : '' }}">ユーザー管理</a>
+                    <a href="{{ route('admin.dashboard') }}" @click="open = false" class="block px-3 py-3 rounded-md text-base text-text-primary hover:bg-background min-h-[44px] {{ request()->routeIs('admin.dashboard') ? 'font-semibold underline underline-offset-4 decoration-2 decoration-text-primary' : 'font-medium' }}">ダッシュボード</a>
+                    <a href="{{ route('books.create') }}" @click="open = false" class="block px-3 py-3 rounded-md text-base text-text-primary hover:bg-background min-h-[44px] {{ request()->routeIs('books.create') ? 'font-semibold underline underline-offset-4 decoration-2 decoration-text-primary' : 'font-medium' }}">書籍登録</a>
+                    <a href="{{ route('loans.index') }}" @click="open = false" class="block px-3 py-3 rounded-md text-base text-text-primary hover:bg-background min-h-[44px] {{ request()->routeIs('loans.index') ? 'font-semibold underline underline-offset-4 decoration-2 decoration-text-primary' : 'font-medium' }}">貸出履歴</a>
+                    <a href="{{ route('loans.overdue') }}" @click="open = false" class="block px-3 py-3 rounded-md text-base text-text-primary hover:bg-background min-h-[44px] {{ request()->routeIs('loans.overdue') ? 'font-semibold underline underline-offset-4 decoration-2 decoration-text-primary' : 'font-medium' }}">延滞一覧</a>
+                    <a href="{{ route('admin.users.index') }}" @click="open = false" class="block px-3 py-3 rounded-md text-base text-text-primary hover:bg-background min-h-[44px] {{ request()->routeIs('admin.users.index') ? 'font-semibold underline underline-offset-4 decoration-2 decoration-text-primary' : 'font-medium' }}">ユーザー管理</a>
                 @endif
-                <a href="{{ route('loans.my') }}" @click="open = false" class="block px-3 py-3 rounded-md text-base font-medium text-text-primary hover:bg-background min-h-[44px] {{ request()->routeIs('loans.my') ? 'font-semibold border-l-2 border-text-primary' : '' }}">マイページ</a>
+                <a href="{{ route('loans.my') }}" @click="open = false" class="block px-3 py-3 rounded-md text-base text-text-primary hover:bg-background min-h-[44px] {{ request()->routeIs('loans.my') ? 'font-semibold underline underline-offset-4 decoration-2 decoration-text-primary' : 'font-medium' }}">マイページ</a>
                 <form method="POST" action="{{ route('logout') }}" class="block">
                     @csrf
                     <button type="submit" @click="open = false" class="block w-full text-left px-3 py-3 rounded-md text-base font-medium text-text-primary hover:bg-background min-h-[44px]">ログアウト</button>
                 </form>
             @else
-                <a href="{{ route('login') }}" @click="open = false" class="block px-3 py-3 rounded-md text-base font-medium text-text-primary hover:bg-background min-h-[44px] {{ request()->routeIs('login') ? 'font-semibold border-l-2 border-text-primary' : '' }}">ログイン</a>
-                <a href="{{ route('register') }}" @click="open = false" class="block px-3 py-3 rounded-md text-base font-medium text-text-primary hover:bg-background min-h-[44px] {{ request()->routeIs('register') ? 'font-semibold border-l-2 border-text-primary' : '' }}">登録</a>
+                <a href="{{ route('login') }}" @click="open = false" class="block px-3 py-3 rounded-md text-base text-text-primary hover:bg-background min-h-[44px] {{ request()->routeIs('login') ? 'font-semibold underline underline-offset-4 decoration-2 decoration-text-primary' : 'font-medium' }}">ログイン</a>
+                <a href="{{ route('register') }}" @click="open = false" class="block px-3 py-3 rounded-md text-base text-text-primary hover:bg-background min-h-[44px] {{ request()->routeIs('register') ? 'font-semibold underline underline-offset-4 decoration-2 decoration-text-primary' : 'font-medium' }}">登録</a>
             @endauth
         </div>
     </div>
