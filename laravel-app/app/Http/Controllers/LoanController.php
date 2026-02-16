@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Loan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LoanController extends Controller
 {
@@ -35,25 +36,28 @@ class LoanController extends Controller
             'book_id' => 'required|exists:books,id'
         ]);
 
-        // 既に貸出中かチェック
-        $existingLoan = Loan::where('book_id', $request->book_id)
-                            ->where('status', Loan::STATUS_BORROWED)
-                            ->first();
+        return DB::transaction(function () use ($request) {
+            // 既に貸出中かチェック（排他ロック）
+            $existingLoan = Loan::where('book_id', $request->book_id)
+                                ->where('status', Loan::STATUS_BORROWED)
+                                ->lockForUpdate()
+                                ->first();
 
-        if ($existingLoan) {
-            return redirect()->route('books.index')->with('error', 'この本は既に貸出中です');
-        }
+            if ($existingLoan) {
+                return redirect()->route('books.index')->with('error', 'この本は既に貸出中です');
+            }
 
-        // 貸出記録作成
-        Loan::create([
-            'user_id' => auth()->id(),
-            'book_id' => $request->book_id,
-            'borrowed_at' => now(),
-            'due_date' => now()->addDays(14), // 14日後
-            'status' => Loan::STATUS_BORROWED
-        ]);
+            // 貸出記録作成
+            Loan::create([
+                'user_id' => auth()->id(),
+                'book_id' => $request->book_id,
+                'borrowed_at' => now(),
+                'due_date' => now()->addDays(14), // 14日後
+                'status' => Loan::STATUS_BORROWED
+            ]);
 
-        return redirect()->route('books.index')->with('success', '本を借りました！');
+            return redirect()->route('books.index')->with('success', '本を借りました！');
+        });
     }
 
     // 3. 返却処理

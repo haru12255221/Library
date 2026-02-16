@@ -149,7 +149,7 @@ class BookManagementTest extends TestCase
                          ->delete("/books/{$book->id}");
 
         $response->assertRedirect('/books');
-        $this->assertDatabaseMissing('books', ['id' => $book->id]);
+        $this->assertSoftDeleted('books', ['id' => $book->id]);
     }
 
     /** @test */

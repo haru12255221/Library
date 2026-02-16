@@ -24,8 +24,6 @@ class Loan extends Model
 
     const STATUS_BORROWED = 1;  // 貸出中
     const STATUS_RETURNED = 2;  // 返却済み
-    const STATUS_OVERDUE = 3;   // 延滞
-
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -33,7 +31,7 @@ class Loan extends Model
 
     public function book()
     {
-        return $this->belongsTo(Book::class);
+        return $this->belongsTo(Book::class)->withTrashed();
     }
 
     // 5. 便利メソッド
@@ -47,8 +45,4 @@ class Loan extends Model
         return $this->status === self::STATUS_RETURNED;
     }
 
-    public function isOverdue()
-    {
-        return $this->status === self::STATUS_OVERDUE;
-    }
 }
