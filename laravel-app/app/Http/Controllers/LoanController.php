@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AuditLog;
 use App\Models\Book;
 use App\Models\Loan;
 use Illuminate\Http\Request;
@@ -48,13 +49,15 @@ class LoanController extends Controller
             }
 
             // 貸出記録作成
-            Loan::create([
+            $loan = Loan::create([
                 'user_id' => auth()->id(),
                 'book_id' => $request->book_id,
                 'borrowed_at' => now(),
                 'due_date' => now()->addDays(14), // 14日後
                 'status' => Loan::STATUS_BORROWED
             ]);
+
+            AuditLog::log('book_borrowed', $loan, "書籍ID: {$request->book_id}");
 
             return redirect()->route('books.index')->with('success', '本を借りました！');
         });
@@ -75,6 +78,8 @@ class LoanController extends Controller
             'status' => Loan::STATUS_RETURNED
         ]);
 
+        AuditLog::log('book_returned', $loan, "書籍ID: {$loan->book_id}");
+
         return redirect()->route('loans.my')->with('success', '本を返却しました！');
     }
 
@@ -89,6 +94,8 @@ class LoanController extends Controller
             'returned_at' => now(),
             'status' => Loan::STATUS_RETURNED,
         ]);
+
+        AuditLog::log('book_force_returned', $loan, "書籍: {$loan->book->title}, 借主: {$loan->user->name}");
 
         return back()->with('success', "「{$loan->book->title}」を強制返却しました（借主: {$loan->user->name}）");
     }

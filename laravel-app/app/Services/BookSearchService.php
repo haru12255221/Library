@@ -90,7 +90,7 @@ class BookSearchService
                 return null;
             }
 
-            $xml = simplexml_load_string($response->body());
+            $xml = simplexml_load_string($response->body(), 'SimpleXMLElement', LIBXML_NONET);
             if ($xml === false) {
                 Log::warning("NDL API: Failed to parse XML for ISBN {$isbn}");
                 return null;
