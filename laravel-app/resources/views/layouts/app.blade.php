@@ -14,6 +14,7 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <style>[x-cloak] { display: none !important; }</style>
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-background flex flex-col overflow-x-hidden w-full">

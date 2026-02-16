@@ -53,7 +53,7 @@
                             </svg>
                             検索
                         </span>
-                        <span x-show="isSearching" class="flex items-center justify-center gap-2">
+                        <span x-show="isSearching" x-cloak class="flex items-center justify-center gap-2">
                             <x-ui.loading type="spinner" size="sm" />
                             検索中...
                         </span>
