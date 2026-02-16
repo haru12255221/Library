@@ -110,8 +110,7 @@ class Book extends Model
      */
     public function getDisplayTitleAttribute(): string
     {
-        $totalCopies = static::where('isbn', $this->isbn)->count();
-        if ($totalCopies > 1) {
+        if ($this->copy_number > 1) {
             return "{$this->title} [冊{$this->copy_number}]";
         }
         return $this->title;
