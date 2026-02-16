@@ -111,7 +111,7 @@ class Book extends Model
     public function getDisplayTitleAttribute(): string
     {
         if ($this->copy_number > 1) {
-            return "{$this->title} [冊{$this->copy_number}]";
+            return "{$this->title} [{$this->copy_number}]";
         }
         return $this->title;
     }
