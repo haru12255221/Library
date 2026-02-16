@@ -502,86 +502,27 @@ Docker構成にRedisコンテナが含まれているが、Render本番環境で
 
 ---
 
-### 🟡 MEDIUM（改善すべきだが緊急ではない）
+### ~~🟡 MEDIUM（改善すべきだが緊急ではない）~~ ✅
 
 ---
 
-### M-1. セキュリティヘッダーをアプリケーションレベルで追加する
+### ~~M-1. セキュリティヘッダーをアプリケーションレベルで追加する~~ ✅
+- `SecurityHeadersMiddleware` を作成しグローバル登録（二重防御）
+- NginxのCSPにも `'unsafe-eval'` を追加（Alpine.js対応）
 
-**何が問題か：**
-Nginx設定にはセキュリティヘッダーがあるが、Render環境ではNginxが使われていない場合（C-1修正前）、
-セキュリティヘッダーが一切送信されない。
+### ~~M-2. 監査ログ（誰が何をしたか）を記録する~~ ✅
+- `audit_logs` テーブル + `AuditLog` モデルを作成
+- 書籍登録・編集・削除、貸出・返却・強制返却、権限変更に監査ログを追加
 
-**修正方針：**
-Laravelミドルウェアでセキュリティヘッダーを追加する。
-C-1の修正後はNginxが使われるため優先度は下がるが、二重防御として有効。
+### ~~M-3. XMLパース時のXXE対策を追加する~~ ✅
+- `simplexml_load_string()` に `LIBXML_NONET` フラグを追加
 
----
+### ~~M-4. ストレージ権限を修正する~~ ✅
+- ルートDockerfile: C-1修正時に775に変更済み
+- `laravel-app/Dockerfile`: 755→775に修正
 
-### M-2. 監査ログ（誰が何をしたか）を記録する
-
-**何が問題か：**
-現在のログは `Log::info("Book registered: ...")` 程度で、
-「誰が」「いつ」「何を」したかの体系的な記録がない。
-
-**影響：**
-- 不正操作があっても追跡できない
-- 「誰がこの本を削除したか」がわからない
-- 学校の監査要件に対応できない可能性
-
-**修正方針：**
-- 書籍の登録・編集・削除、貸出・返却、ユーザー権限変更時に
-  操作者のIDを含むログを記録する
-- 将来的にはActivityLogパッケージ（spatie/laravel-activitylog）の導入を検討
-
----
-
-### M-3. XMLパース時のXXE対策を追加する
-
-**何が問題か：**
-NDL APIからのXMLレスポンスを `simplexml_load_string()` でパースしているが、
-XXE（XML External Entity）攻撃の対策がない。
-
-**該当ファイル：**
-- `app/Services/BookSearchService.php` — `simplexml_load_string()` の呼び出し
-
-**修正方針：**
-パース前に `libxml_disable_entity_loader(true)` を呼ぶか、
-`LIBXML_NOENT` フラグを除外してパースする。
-（PHP 8.0以降は `libxml_disable_entity_loader` は非推奨のため、
-`LIBXML_NONET` フラグを使う）
-
----
-
-### M-4. ストレージ権限を修正する
-
-**何が問題か：**
-Dockerfileで `chmod -R 755` を使っている。755はworld-readableで、
-ログファイル等が外部から読める可能性がある。
-
-**該当ファイル：**
-- `/Dockerfile`（ルート）— 修正対象
-- `/laravel-app/Dockerfile` — 88-89行目
-
-**修正方針：**
-`chmod -R 755` → `chmod -R 775` に変更する。
-（C-1の修正時にまとめて対応可能）
-
----
-
-### M-5. テストと実装の不整合を修正する
-
-**何が問題か：**
-`BookManagementTest` にISBN重複登録時のエラーテストがあるが、
-実際のコードは重複ISBNを複本（copy_number を自動採番）として正常登録する。
-テストの期待値と実装の動作が矛盾している。
-
-**該当ファイル：**
-- `tests/Feature/BookManagementTest.php` — ISBN重複テスト
-- `app/Http/Controllers/BookController.php` — `store()` メソッド
-
-**修正方針：**
-テストを実装に合わせて修正する（複本登録が正しい動作なので）。
+### ~~M-5. テストと実装の不整合を修正する~~ ✅
+- 確認の結果、テスト（94-108行目）は複本登録を正しく検証しており対応済み
 
 ---
 
