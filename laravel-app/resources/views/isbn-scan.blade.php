@@ -157,7 +157,7 @@
 
                 <!-- 初期メッセージ -->
                 <div id="initial-message" class="text-center text-text-secondary py-8">
-                    <p>📱 ISBNをスキャンまたは入力すると、書籍情報が表示されます</p>
+                    <p>ISBNをスキャンまたは入力すると、書籍情報が表示されます</p>
                 </div>
             </div>
         </div>

@@ -11,7 +11,7 @@
             </x-ui.alert>
         @endif
         @if(session('error'))
-            <x-ui.alert type="danger" dismissible class="mb-6">
+            <x-ui.alert type="error" dismissible class="mb-6">
                 {{ session('error') }}
             </x-ui.alert>
         @endif

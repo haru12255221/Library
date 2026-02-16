@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Book;
+use App\Models\Loan;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -15,9 +16,9 @@ class BookManagementTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
-        // テスト用ユーザーを作成
-        $this->user = User::factory()->create();
+
+        // テスト用管理者ユーザーを作成
+        $this->user = User::factory()->create(['role' => User::ROLE_ADMIN]);
     }
 
     /** @test */
@@ -90,17 +91,85 @@ class BookManagementTest extends TestCase
 
         $response->assertSessionHasErrors(['title', 'author', 'isbn']);
 
-        // 重複するISBNの場合
+        // 重複するISBNの場合 → 複本として正常登録される
         $existingBook = Book::factory()->create(['isbn' => '9784000000000']);
-        
+
         $response = $this->actingAs($this->user)
                          ->post('/books', [
                              'title' => 'テスト書籍',
                              'author' => 'テスト著者',
-                             'isbn' => '9784000000000', // 既存のISBN
+                             'isbn' => '9784000000000',
                          ]);
 
-        $response->assertSessionHasErrors(['isbn']);
+        $response->assertRedirect('/books');
+        $this->assertDatabaseHas('books', [
+            'isbn' => '9784000000000',
+            'copy_number' => 2,
+        ]);
+    }
+
+    /** @test */
+    public function admin_can_view_edit_form()
+    {
+        $book = Book::factory()->create();
+
+        $response = $this->actingAs($this->user)
+                         ->get("/books/{$book->id}/edit");
+
+        $response->assertStatus(200);
+        $response->assertViewIs('books.edit');
+    }
+
+    /** @test */
+    public function admin_can_update_a_book()
+    {
+        $book = Book::factory()->create();
+
+        $response = $this->actingAs($this->user)
+                         ->put("/books/{$book->id}", [
+                             'title' => '更新タイトル',
+                             'author' => '更新著者',
+                             'isbn' => $book->isbn,
+                         ]);
+
+        $response->assertRedirect(route('books.show', $book));
+        $this->assertDatabaseHas('books', [
+            'id' => $book->id,
+            'title' => '更新タイトル',
+            'author' => '更新著者',
+        ]);
+    }
+
+    /** @test */
+    public function admin_can_delete_a_book()
+    {
+        $book = Book::factory()->create();
+
+        $response = $this->actingAs($this->user)
+                         ->delete("/books/{$book->id}");
+
+        $response->assertRedirect('/books');
+        $this->assertDatabaseMissing('books', ['id' => $book->id]);
+    }
+
+    /** @test */
+    public function admin_cannot_delete_borrowed_book()
+    {
+        $book = Book::factory()->create();
+        Loan::create([
+            'user_id' => $this->user->id,
+            'book_id' => $book->id,
+            'borrowed_at' => now(),
+            'due_date' => now()->addDays(14),
+            'status' => Loan::STATUS_BORROWED,
+        ]);
+
+        $response = $this->actingAs($this->user)
+                         ->delete("/books/{$book->id}");
+
+        $response->assertRedirect();
+        $response->assertSessionHas('error');
+        $this->assertDatabaseHas('books', ['id' => $book->id]);
     }
 
     /** @test */
