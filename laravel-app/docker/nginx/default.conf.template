@@ -1,0 +1,73 @@
+server {
+    listen ${PORT};
+    server_name localhost;
+    root /var/www/public;
+    index index.php index.html;
+
+    # セキュリティヘッダー
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer-when-downgrade" always;
+    add_header Content-Security-Policy "default-src 'self' http: https: data: blob: 'unsafe-inline'" always;
+
+    # 静的ファイルのキャッシュ設定
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+        add_header X-Content-Type-Options nosniff;
+        access_log off;
+    }
+
+    # Laravel アプリケーション
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    # PHP処理
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+
+        # タイムアウト設定
+        fastcgi_connect_timeout 60s;
+        fastcgi_send_timeout 60s;
+        fastcgi_read_timeout 60s;
+
+        # バッファ設定
+        fastcgi_buffer_size 128k;
+        fastcgi_buffers 4 256k;
+        fastcgi_busy_buffers_size 256k;
+    }
+
+    # .htaccess、.env等の隠しファイルへのアクセス拒否
+    location ~ /\. {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+
+    # ヘルスチェックエンドポイント
+    location /health {
+        access_log off;
+        return 200 "healthy\n";
+        add_header Content-Type text/plain;
+    }
+
+    # robots.txt
+    location = /robots.txt {
+        access_log off;
+        log_not_found off;
+    }
+
+    # favicon.ico
+    location = /favicon.ico {
+        access_log off;
+        log_not_found off;
+    }
+}

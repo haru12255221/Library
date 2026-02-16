@@ -12,11 +12,14 @@ class LoanManagementTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected User $admin;
+
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         $this->user = User::factory()->create();
+        $this->admin = User::factory()->create(['role' => User::ROLE_ADMIN]);
         $this->book = Book::factory()->create();
     }
 
@@ -138,5 +141,64 @@ class LoanManagementTest extends TestCase
             'book_id' => $this->book->id,
             'returned_at' => null,
         ]);
+    }
+
+    /** @test */
+    public function admin_can_view_all_loans()
+    {
+        $response = $this->actingAs($this->admin)->get('/loans');
+
+        $response->assertStatus(200);
+        $response->assertViewIs('loans.index');
+    }
+
+    /** @test */
+    public function admin_can_view_overdue_loans()
+    {
+        $response = $this->actingAs($this->admin)->get('/loans/overdue');
+
+        $response->assertStatus(200);
+        $response->assertViewIs('loans.overdue');
+    }
+
+    /** @test */
+    public function admin_can_force_return_a_loan()
+    {
+        $loan = Loan::create([
+            'user_id' => $this->user->id,
+            'book_id' => $this->book->id,
+            'borrowed_at' => now(),
+            'due_date' => now()->addDays(14),
+            'status' => Loan::STATUS_BORROWED,
+        ]);
+
+        $response = $this->actingAs($this->admin)
+            ->post("/loans/{$loan->id}/force-return");
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success');
+
+        $loan->refresh();
+        $this->assertNotNull($loan->returned_at);
+        $this->assertEquals(Loan::STATUS_RETURNED, $loan->status);
+    }
+
+    /** @test */
+    public function admin_cannot_force_return_already_returned_loan()
+    {
+        $loan = Loan::create([
+            'user_id' => $this->user->id,
+            'book_id' => $this->book->id,
+            'borrowed_at' => now(),
+            'due_date' => now()->addDays(14),
+            'returned_at' => now(),
+            'status' => Loan::STATUS_RETURNED,
+        ]);
+
+        $response = $this->actingAs($this->admin)
+            ->post("/loans/{$loan->id}/force-return");
+
+        $response->assertRedirect();
+        $response->assertSessionHas('error');
     }
 }
