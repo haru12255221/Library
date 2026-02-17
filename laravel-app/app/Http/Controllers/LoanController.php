@@ -75,6 +75,11 @@ class LoanController extends Controller
             ->with('error', '他人の貸出記録は操作できません');
         }
 
+        // 既に返却済みかチェック
+        if ($loan->returned_at) {
+            return redirect()->route('loans.my')->with('error', 'この貸出は既に返却済みです');
+        }
+
         // 返却処理
         $loan->update([
             'returned_at' => now(),
