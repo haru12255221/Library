@@ -41,8 +41,10 @@
                     </label>
                 </div>
 
-                <div class="flex items-center justify-end mt-4">
-                    {{-- TODO: パスワードリセット機能（メール設定後に有効化） --}}
+                <div class="flex items-center justify-between mt-4">
+                    <a class="text-sm text-text-secondary hover:text-text-primary underline" href="{{ route('password.request') }}">
+                        パスワードを忘れた場合
+                    </a>
 
                     <button type="submit" class="ms-3 inline-flex items-center px-4 py-2 bg-primary border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-primary-hover focus:bg-primary-hover active:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:ring-offset-2 transition ease-in-out duration-150">
                         ログイン
