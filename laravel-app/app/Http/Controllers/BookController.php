@@ -54,31 +54,35 @@ class BookController extends Controller
             'thumbnail_url' => 'nullable|url',
         ]);
 
-        // 同じISBNの最大copy_numberを取得して+1
-        $maxCopy = Book::where('isbn', $request->isbn)->max('copy_number') ?? 0;
-        $copyNumber = $maxCopy + 1;
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($request) {
+            // 同じISBNの最大copy_numberを取得して+1（排他ロック）
+            $maxCopy = Book::where('isbn', $request->isbn)
+                ->lockForUpdate()
+                ->max('copy_number') ?? 0;
+            $copyNumber = $maxCopy + 1;
 
-        // データベースに保存
-        $book = Book::create([
-            'title' => $request->title,
-            'author' => $request->author,
-            'isbn' => $request->isbn,
-            'copy_number' => $copyNumber,
-            'publisher' => $request->publisher,
-            'published_date' => $request->published_date,
-            'description' => $request->description,
-            'thumbnail_url' => $request->thumbnail_url,
-        ]);
+            // データベースに保存
+            $book = Book::create([
+                'title' => $request->title,
+                'author' => $request->author,
+                'isbn' => $request->isbn,
+                'copy_number' => $copyNumber,
+                'publisher' => $request->publisher,
+                'published_date' => $request->published_date,
+                'description' => $request->description,
+                'thumbnail_url' => $request->thumbnail_url,
+            ]);
 
-        $copyLabel = $copyNumber > 1 ? "（冊{$copyNumber}）" : '';
-        Log::info("Book registered: {$book->title}{$copyLabel} (ID: {$book->id})");
-        AuditLog::log('book_created', $book, "{$book->title}{$copyLabel}");
+            $copyLabel = $copyNumber > 1 ? "（冊{$copyNumber}）" : '';
+            Log::info("Book registered: {$book->title}{$copyLabel} (ID: {$book->id})");
+            AuditLog::log('book_created', $book, "{$book->title}{$copyLabel}");
 
-        $message = $copyNumber > 1
-            ? "書籍を登録しました（{$copyNumber}冊目）"
-            : '書籍を登録しました';
+            $message = $copyNumber > 1
+                ? "書籍を登録しました（{$copyNumber}冊目）"
+                : '書籍を登録しました';
 
-        return redirect()->route('books.index')->with('success', $message);
+            return redirect()->route('books.index')->with('success', $message);
+        });
     } 
 
     // ISBN検索（拡張版）

@@ -154,7 +154,7 @@
         <script>
             function searchForm() {
                 return {
-                    searchQuery: '{{ request('search') }}' || '',
+                    searchQuery: @json(request('search', '')),
                     hasSearchParam: {{ request('search') ? 'true' : 'false' }},
                     isSearching: false,
                     

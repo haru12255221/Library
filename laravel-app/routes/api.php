@@ -19,8 +19,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// ISBN検索API
-Route::get('/book/info/{isbn}', function (Request $request, $isbn) {
+// ISBN検索API（1分あたり30回まで）
+Route::middleware('throttle:30,1')->get('/book/info/{isbn}', function (Request $request, $isbn) {
     try {
         $service = app(BookSearchService::class);
         $bookData = $service->fetchByIsbn($isbn);
@@ -42,9 +42,10 @@ Route::get('/book/info/{isbn}', function (Request $request, $isbn) {
             'error' => 'この ISBN の書籍情報が見つかりませんでした。'
         ], 404);
     } catch (\Exception $e) {
+        \Illuminate\Support\Facades\Log::error("ISBN API Error: " . $e->getMessage());
         return response()->json([
             'success' => false,
-            'error' => 'サーバーエラーが発生しました: ' . $e->getMessage()
+            'error' => 'サーバーエラーが発生しました。しばらくしてから再度お試しください。'
         ], 500);
     }
 })->name('api.book.info');
