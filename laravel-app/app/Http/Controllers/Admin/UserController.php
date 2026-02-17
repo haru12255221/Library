@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AuditLog;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -25,12 +26,12 @@ class UserController extends Controller
             return back()->with('error', '自分自身の権限は変更できません');
         }
 
-        $user->update([
-            'role' => $user->isAdmin() ? User::ROLE_USER : User::ROLE_ADMIN,
-        ]);
+        $user->role = $user->isAdmin() ? User::ROLE_USER : User::ROLE_ADMIN;
+        $user->save();
 
         $newRole = $user->isAdmin() ? '管理者' : '一般ユーザー';
         Log::info("User role changed: {$user->name} → {$newRole} (ID: {$user->id})");
+        AuditLog::log('user_role_changed', $user, "{$user->name} → {$newRole}");
 
         return back()->with('success', "「{$user->name}」の権限を{$newRole}に変更しました");
     }

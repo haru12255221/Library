@@ -42,9 +42,10 @@ Route::get('/book/info/{isbn}', function (Request $request, $isbn) {
             'error' => 'この ISBN の書籍情報が見つかりませんでした。'
         ], 404);
     } catch (\Exception $e) {
+        \Illuminate\Support\Facades\Log::error("ISBN API Error: " . $e->getMessage());
         return response()->json([
             'success' => false,
-            'error' => 'サーバーエラーが発生しました: ' . $e->getMessage()
+            'error' => 'サーバーエラーが発生しました。しばらくしてから再度お試しください。'
         ], 500);
     }
 })->name('api.book.info');

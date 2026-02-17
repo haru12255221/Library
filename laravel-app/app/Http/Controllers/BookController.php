@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AuditLog;
 use App\Models\Book;
 use App\Services\BookSearchService;
 use Illuminate\Http\Request;
@@ -71,6 +72,7 @@ class BookController extends Controller
 
         $copyLabel = $copyNumber > 1 ? "（冊{$copyNumber}）" : '';
         Log::info("Book registered: {$book->title}{$copyLabel} (ID: {$book->id})");
+        AuditLog::log('book_created', $book, "{$book->title}{$copyLabel}");
 
         $message = $copyNumber > 1
             ? "書籍を登録しました（{$copyNumber}冊目）"
@@ -158,6 +160,7 @@ class BookController extends Controller
         ]);
 
         Log::info("Book updated: {$book->title} (ID: {$book->id})");
+        AuditLog::log('book_updated', $book, $book->title);
 
         return redirect()->route('books.show', $book)->with('success', '書籍情報を更新しました');
     }
@@ -173,6 +176,7 @@ class BookController extends Controller
         $book->delete();
 
         Log::info("Book deleted: {$title} (ID: {$book->id})");
+        AuditLog::log('book_deleted', $book, $title);
 
         return redirect()->route('books.index')->with('success', "「{$title}」を削除しました");
     }
