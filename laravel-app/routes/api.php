@@ -19,8 +19,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// ISBN検索API
-Route::get('/book/info/{isbn}', function (Request $request, $isbn) {
+// ISBN検索API（1分あたり30回まで）
+Route::middleware('throttle:30,1')->get('/book/info/{isbn}', function (Request $request, $isbn) {
     try {
         $service = app(BookSearchService::class);
         $bookData = $service->fetchByIsbn($isbn);
