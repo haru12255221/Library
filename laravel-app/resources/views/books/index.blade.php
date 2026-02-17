@@ -1,6 +1,4 @@
 <x-app-layout>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
     <div class="max-w-7xl mx-auto px-4 w-full">
         <!-- 成功メッセージ -->
         @if(session('success'))

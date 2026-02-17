@@ -1,6 +1,4 @@
 <x-app-layout>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
     <div class="max-w-4xl mx-auto px-4 py-8">
         <!-- ヘッダー -->
         <div class="mb-8">
