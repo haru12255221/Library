@@ -46,6 +46,13 @@ class ProfileController extends Controller
             'password' => ['required', 'current_password'],
         ]);
 
+        // 貸出中の本があれば削除を拒否
+        $activeLoanCount = $request->user()->loans()
+            ->whereNull('returned_at')->count();
+        if ($activeLoanCount > 0) {
+            return back()->with('error', '貸出中の本があるため、アカウントを削除できません。先に返却してください。');
+        }
+
         $user = $request->user();
 
         Auth::logout();
