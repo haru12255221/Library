@@ -55,10 +55,11 @@ class BookController extends Controller
         ]);
 
         return \Illuminate\Support\Facades\DB::transaction(function () use ($request) {
-            // 同じISBNの最大copy_numberを取得して+1（排他ロック）
+            // 同じISBNの行をロックしてからPHP側で最大copy_numberを取得
             $maxCopy = Book::where('isbn', $request->isbn)
                 ->lockForUpdate()
-                ->max('copy_number') ?? 0;
+                ->pluck('copy_number')
+                ->max() ?? 0;
             $copyNumber = $maxCopy + 1;
 
             // データベースに保存
