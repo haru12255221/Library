@@ -32,9 +32,12 @@ class LoanController extends Controller
     // 2. 貸出処理
     public function borrow(Request $request)
     {
-        // バリデーション
+        // バリデーション（ソフトデリート済みの書籍を除外）
         $request->validate([
-            'book_id' => 'required|exists:books,id'
+            'book_id' => [
+                'required',
+                \Illuminate\Validation\Rule::exists('books', 'id')->whereNull('deleted_at'),
+            ],
         ]);
 
         return DB::transaction(function () use ($request) {

@@ -26,9 +26,8 @@ class UserController extends Controller
             return back()->with('error', '自分自身の権限は変更できません');
         }
 
-        $user->update([
-            'role' => $user->isAdmin() ? User::ROLE_USER : User::ROLE_ADMIN,
-        ]);
+        $user->role = $user->isAdmin() ? User::ROLE_USER : User::ROLE_ADMIN;
+        $user->save();
 
         $newRole = $user->isAdmin() ? '管理者' : '一般ユーザー';
         Log::info("User role changed: {$user->name} → {$newRole} (ID: {$user->id})");

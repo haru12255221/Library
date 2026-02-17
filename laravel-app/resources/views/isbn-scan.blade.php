@@ -193,7 +193,7 @@
                 return;
             }
 
-            document.getElementById('result').innerHTML = '<p class="text-text-primary">ISBN検出: ' + decodedText + '</p>';
+            document.getElementById('result').textContent = 'ISBN検出: ' + decodedText;
             document.getElementById('manual-isbn').value = decodedText;
             
             // 書籍情報を取得
@@ -386,10 +386,17 @@
             }
         }
 
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         // より詳細なエラーメッセージ
         function getDetailedErrorMessage(error, isbn) {
+            const safeIsbn = escapeHtml(isbn);
             if (error.includes('404') || error.includes('見つかりません')) {
-                return `ISBN「${isbn}」の書籍情報が見つかりませんでした。以下をご確認ください：
+                return `ISBN「${safeIsbn}」の書籍情報が見つかりませんでした。以下をご確認ください：
                         <ul class="mt-2 ml-4 list-disc text-sm">
                             <li>ISBNが正しく入力されているか</li>
                             <li>ハイフンの位置が正しいか</li>
