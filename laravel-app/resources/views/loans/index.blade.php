@@ -47,6 +47,7 @@
                                         @endif
                                     </a>
                                 </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-text-secondary uppercase tracking-wider">操作</th>
                             </tr>
                         </thead>
                         <tbody class="bg-background divide-y divide-border-light">
@@ -60,22 +61,30 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">{{ $loan->borrowed_at->format('Y/m/d') }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-text-secondary">{{ $loan->due_date->format('Y/m/d') }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        {{-- ▼ここがポイント！▼ --}}
                                         @if ($loan->returned_at)
-                                            {{-- 返却日が記録されていれば「返却済み」と表示 --}}
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                                                 返却済み ({{ $loan->returned_at->format('Y/m/d') }})
                                             </span>
                                         @elseif ($loan->due_date->isPast())
-                                            {{-- 返却されておらず、期限が過ぎていれば「期限切れ」と表示 --}}
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
                                                 期限切れ
                                             </span>
                                         @else
-                                            {{-- それ以外（返却されておらず、期限内）は「貸出中」--}}
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                                 貸出中
                                             </span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        @if (!$loan->returned_at)
+                                            <form method="POST" action="{{ route('loans.return', $loan) }}"
+                                                  onsubmit="return confirm('「{{ $loan->book->title }}」を返却済みにしますか？')">
+                                                @csrf
+                                                <button type="submit"
+                                                        class="px-3 py-1 bg-danger text-white text-sm rounded hover:bg-danger-hover transition-colors">
+                                                    返却処理
+                                                </button>
+                                            </form>
                                         @endif
                                     </td>
                                 </tr>

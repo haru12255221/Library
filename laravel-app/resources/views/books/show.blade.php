@@ -74,18 +74,27 @@
                                     <img src="{{ asset('images/library-available.png') }}" alt="利用可能" class="w-auto h-12">
                                     <span class="text-lg font-medium text-green-600">利用可能</span>
                                 </div>
-                                @auth
-                                    <form method="POST" action="{{ route('loans.borrow') }}" class="inline" 
-                                          onsubmit="return confirm('「{{ $book->title }}」を借りますか？')">
+                                @if(auth()->check() && auth()->user()->isAdmin())
+                                    <form method="POST" action="{{ route('loans.borrow') }}"
+                                          onsubmit="return this.querySelector('[name=user_id]').value || (alert('借主を選択してください') || false)">
                                         @csrf
                                         <input type="hidden" name="book_id" value="{{ $book->id }}">
-                                        <x-ui.button type="submit" variant="primary" size="lg">
-                                            この本を借りる
-                                        </x-ui.button>
+                                        <div class="flex items-center gap-2">
+                                            <select name="user_id" required
+                                                    class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
+                                                <option value="">-- 借主を選択 --</option>
+                                                @foreach($users as $u)
+                                                    <option value="{{ $u->id }}">{{ $u->name }}</option>
+                                                @endforeach
+                                            </select>
+                                            <x-ui.button type="submit" variant="primary" size="lg">
+                                                この本を借りる
+                                            </x-ui.button>
+                                        </div>
                                     </form>
                                 @else
-                                    <p class="text-sm text-gray-500">ログインすると借りることができます</p>
-                                @endauth
+                                    <p class="text-sm text-gray-500">貸出は管理者が行います</p>
+                                @endif
                             </div>
                         @elseif($book->isBorrowedByMe())
                             <div class="flex items-center justify-between">

@@ -28,10 +28,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // 貸出機能（一般ユーザー）
+    // マイページ（一般ユーザーも閲覧可）
     Route::get('/my-loans', [LoanController::class, 'myLoans'])->name('loans.my');
-    Route::post('/loans/borrow', [LoanController::class, 'borrow'])->name('loans.borrow');
-    Route::post('/loans/return/{loan}', [LoanController::class, 'returnBook'])->name('loans.return');
+
+    // 貸出・返却操作（管理者のみ）
+    Route::post('/loans/borrow', [LoanController::class, 'borrow'])->name('loans.borrow')->middleware('admin');
+    Route::post('/loans/return/{loan}', [LoanController::class, 'returnBook'])->name('loans.return')->middleware('admin');
 });
 
 // 管理者専用ルート（統一）

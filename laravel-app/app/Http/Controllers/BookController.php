@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\User;
 use App\Services\GoogleBooksService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -51,7 +52,7 @@ class BookController extends Controller
         }
 
         $books = $query->with('currentLoan')->orderBy('created_at', 'desc')->get();
-        
+
         if ($search) {
             Log::info("Book search completed", [
                 'search_term' => $search,
@@ -59,7 +60,12 @@ class BookController extends Controller
             ]);
         }
 
-        return view('books.index', compact('books', 'search'));
+        $users = collect();
+        if (auth()->check() && auth()->user()->isAdmin()) {
+            $users = User::where('role', User::ROLE_USER)->orderBy('name')->get();
+        }
+
+        return view('books.index', compact('books', 'search', 'users'));
     }
     // 書籍登録フォーム
     public function create()
@@ -154,7 +160,12 @@ class BookController extends Controller
             ->limit(6)
             ->get();
 
-        return view('books.show', compact('book', 'relatedBooks'));
+        $users = collect();
+        if (auth()->check() && auth()->user()->isAdmin()) {
+            $users = User::where('role', User::ROLE_USER)->orderBy('name')->get();
+        }
+
+        return view('books.show', compact('book', 'relatedBooks', 'users'));
     }
 
     // 書籍編集フォーム表示

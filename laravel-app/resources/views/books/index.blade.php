@@ -164,15 +164,24 @@
                                             <img src="{{ asset('images/library-available.png') }}" alt="利用可能" class="w-auto h-12">
                                             利用可能
                                         </span>
-                                        @auth
-                                            <form method="POST" action="{{ route('loans.borrow') }}" class="inline" onsubmit="return confirm('「{{ $book->title }}」を借りますか？')" onclick="event.stopPropagation();">
+                                        @if(auth()->check() && auth()->user()->isAdmin())
+                                            <form method="POST" action="{{ route('loans.borrow') }}" class="flex items-center gap-2" onclick="event.stopPropagation();"
+                                                  onsubmit="return this.querySelector('[name=user_id]').value || (alert('借主を選択してください') || false)">
                                                 @csrf
                                                 <input type="hidden" name="book_id" value="{{ $book->id }}">
+                                                <select name="user_id" required
+                                                        class="text-sm border border-border-light rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-primary"
+                                                        onclick="event.stopPropagation();">
+                                                    <option value="">借主を選択</option>
+                                                    @foreach($users as $u)
+                                                        <option value="{{ $u->id }}">{{ $u->name }}</option>
+                                                    @endforeach
+                                                </select>
                                                 <x-ui.button type="submit" variant="primary">
-                                                    借りる
+                                                    貸出
                                                 </x-ui.button>
                                             </form>
-                                        @endauth
+                                        @endif
                                     @elseif($book->isBorrowedByMe())
                                         {{-- 貸出中（あなた）: モバイルではアイコンのみ --}}
                                         <span class="font-medium flex items-center gap-2 text-primary">
